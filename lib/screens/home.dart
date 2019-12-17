@@ -22,11 +22,21 @@ class _HomeState extends State<Home> {
     MyCart(),
     Account(),
   ];
+  final List<String> _appBarNames = [
+    'Grocery',
+    'Cart',
+    'Account',
+  ];
 
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<CartModel>(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text(_appBarNames[_currentIndex],
+            style: Theme.of(context).textTheme.display4),
+        backgroundColor: Colors.lightGreen,
+      ),
       body: _children[_currentIndex], // new
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped, // new

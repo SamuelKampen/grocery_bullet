@@ -8,34 +8,28 @@ final oCcy = new NumberFormat("#,##0.00", "en_US");
 class MyCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Cart', style: Theme.of(context).textTheme.display4),
-        backgroundColor: Colors.lightGreen,
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: _CartList(),
-              ),
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: _CartList(),
             ),
-            Divider(height: 10, color: Colors.black),
-            _CartTotal(),
-            SizedBox(
-              width: double.infinity,
-              child: RaisedButton(
-                onPressed: () {},
-                child: Text('Buy', style: Theme.of(context).textTheme.display4),
-                color: Colors.lightGreen,
-                textColor: Colors.white,
-              ),
+          ),
+          Divider(height: 10, color: Colors.black),
+          _CartTotal(),
+          SizedBox(
+            width: double.infinity,
+            child: RaisedButton(
+              onPressed: () {},
+              child: Text('Buy', style: Theme.of(context).textTheme.display4),
+              color: Colors.lightGreen,
+              textColor: Colors.white,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

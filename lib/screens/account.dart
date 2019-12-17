@@ -7,18 +7,13 @@ class Account extends StatelessWidget {
   Widget build(BuildContext context) {
     var user = Provider.of<AccountModel>(context);
     // TODO: Make this pretty
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Account', style: Theme.of(context).textTheme.display4),
-          backgroundColor: Colors.lightGreen,
-        ),
-        body: Column(
-          children: <Widget>[
-            Text(user.getUser().getEmail()),
-            Text(user.getUser().getCreditCard()),
-            Text(user.getUser().getLocation()),
-            Text(user.getUser().getUnitNumber().toString())
-          ],
-        ));
+    return Column(
+      children: <Widget>[
+        Text(user.getUser().getEmail()),
+        Text(user.getUser().getCreditCard()),
+        Text(user.getUser().getLocation()),
+        Text(user.getUser().getUnitNumber().toString())
+      ],
+    );
   }
 }

@@ -7,29 +7,24 @@ import 'package:intl/intl.dart';
 final oCcy = new NumberFormat("#,##0.00", "en_US");
 
 class MyCatalog extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     var catalog = Provider.of<CatalogModel>(context);
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          _MyAppBar(),
-          SliverToBoxAdapter(child: SizedBox(height: 12)),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                if (index >= catalog.getCatalogSize()) return null;
-                return _MyListItem(index);
-              },
-            ),
-          )
-        ],
-      ),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(child: SizedBox(height: 12)),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              if (index >= catalog.getCatalogSize()) return null;
+              return _MyListItem(index);
+            },
+          ),
+        )
+      ],
     );
   }
 }
-
 
 class _AddButton extends StatelessWidget {
   final Item item;
