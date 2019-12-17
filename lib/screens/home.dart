@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
             title: Text('\$${oCcy.format(cart.getTotalPrice())}'),
           ),
           new BottomNavigationBarItem(
-              icon: Icon(Icons.person), title: Text('Profile'))
+              icon: Icon(Icons.person), title: Text('Account'))
         ],
       ),
     );

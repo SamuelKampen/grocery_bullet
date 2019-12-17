@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class UserModel {
+class AccountModel {
   static const String _testEmail = 'coolguy@awesomeemail.abc';
   static const String _testLocation = 'A pineapple under the sea';
   static const int _testUnitNumber = 517;
@@ -23,4 +23,10 @@ class User {
   String getCreditCard() => creditCard;
 
   User(this.email, this.location, this.unitNumber, this.creditCard);
+
+  @override
+  int get hashCode => email.hashCode;
+
+  @override
+  bool operator ==(Object other) => other is User && other.email == email;
 }

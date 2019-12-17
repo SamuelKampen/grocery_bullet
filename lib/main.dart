@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_bullet/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:grocery_bullet/common/theme.dart';
 import 'package:grocery_bullet/models/cart.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         // In this sample app, CatalogModel never changes, so a simple Provider
         // is sufficient.
         Provider(builder: (context) => CatalogModel()),
+        Provider(builder: (context) => AccountModel()),
         // CartModel is implemented as a ChangeNotifier, which calls for the use
         // of ChangeNotifierProvider. Moreover, CartModel depends
         // on CatalogModel, so a ProxyProvider is needed.
