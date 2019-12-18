@@ -7,11 +7,11 @@ class AccountModel {
   static const String _testCreditCard = '0000111122223333';
 
 
-  User getUser() => User(_testEmail, _testLocation, _testUnitNumber, _testCreditCard);
+  Account getUser() => Account(_testEmail, _testLocation, _testUnitNumber, _testCreditCard);
 }
 
 @immutable
-class User {
+class Account {
   final String email;
   final String location;
   final int unitNumber;
@@ -22,11 +22,11 @@ class User {
   int getUnitNumber() => unitNumber;
   String getCreditCard() => creditCard;
 
-  User(this.email, this.location, this.unitNumber, this.creditCard);
+  Account(this.email, this.location, this.unitNumber, this.creditCard);
 
   @override
   int get hashCode => email.hashCode;
 
   @override
-  bool operator ==(Object other) => other is User && other.email == email;
+  bool operator ==(Object other) => other is Account && other.email == email;
 }

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/screens/account.dart';
 import 'package:grocery_bullet/screens/cart.dart';
-import 'package:grocery_bullet/screens/catalog.dart';
+import 'package:grocery_bullet/screens/grocery.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
+// Used to format doubles as currency
 final oCcy = new NumberFormat("#,##0.00", "en_US");
 
 class Home extends StatefulWidget {
@@ -18,8 +19,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    MyCatalog(),
-    MyCart(),
+    Grocery(),
+    Cart(),
     Account(),
   ];
   final List<String> _appBarNames = [
@@ -37,10 +38,10 @@ class _HomeState extends State<Home> {
             style: Theme.of(context).textTheme.display4),
         backgroundColor: Colors.lightGreen,
       ),
-      body: _children[_currentIndex], // new
+      body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped, // new
-        currentIndex: _currentIndex, // new
+        onTap: onTabTapped,
+        currentIndex: _currentIndex,
         items: [
           new BottomNavigationBarItem(
             icon: Icon(Icons.home),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_bullet/models/user.dart';
+import 'package:grocery_bullet/models/account.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {

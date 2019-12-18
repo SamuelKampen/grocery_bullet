@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:grocery_bullet/models/cart.dart';
-import 'package:grocery_bullet/models/catalog.dart';
+import 'package:grocery_bullet/models/grocery.dart';
 import 'package:intl/intl.dart';
 
+// Used to format doubles as currency
 final oCcy = new NumberFormat("#,##0.00", "en_US");
 
-class MyCatalog extends StatelessWidget {
+class Grocery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var catalog = Provider.of<CatalogModel>(context);
+    var catalog = Provider.of<GroceryModel>(context);
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(child: SizedBox(height: 12)),
@@ -17,7 +18,7 @@ class MyCatalog extends StatelessWidget {
           delegate: SliverChildBuilderDelegate(
             (context, index) {
               if (index >= catalog.getCatalogSize()) return null;
-              return _MyListItem(index);
+              return _GroceryItem(index);
             },
           ),
         )
@@ -28,13 +29,11 @@ class MyCatalog extends StatelessWidget {
 
 class _AddButton extends StatelessWidget {
   final Item item;
-
   const _AddButton({Key key, @required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<CartModel>(context);
-
     return IconButton(
       onPressed: () => cart.add(item),
       icon: Icon(Icons.add),
@@ -44,13 +43,11 @@ class _AddButton extends StatelessWidget {
 
 class _RemoveButton extends StatelessWidget {
   final Item item;
-
   const _RemoveButton({Key key, @required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<CartModel>(context);
-
     return IconButton(
       onPressed: () => cart.remove(item),
       icon: Icon(Icons.remove),
@@ -58,24 +55,13 @@ class _RemoveButton extends StatelessWidget {
   }
 }
 
-class _MyAppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      title: Text('Grocery', style: Theme.of(context).textTheme.display4),
-      floating: true,
-    );
-  }
-}
-
-class _MyListItem extends StatelessWidget {
+class _GroceryItem extends StatelessWidget {
   final int index;
-
-  _MyListItem(this.index, {Key key}) : super(key: key);
+  _GroceryItem(this.index, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var catalog = Provider.of<CatalogModel>(context);
+    var catalog = Provider.of<GroceryModel>(context);
     var cart = Provider.of<CartModel>(context);
     var item = catalog.getByPosition(index);
     var textTheme = Theme.of(context).textTheme.title;

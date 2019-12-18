@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 ///
 /// For simplicity, the catalog is expected to be immutable (no products are
 /// expected to be added, removed or changed during the execution of the app).
-class CatalogModel {
+class GroceryModel {
   static const _itemNames = [
     'Milk',
     'Soda',

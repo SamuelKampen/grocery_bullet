@@ -1,16 +1,16 @@
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:grocery_bullet/models/catalog.dart';
+import 'package:grocery_bullet/models/grocery.dart';
 
 class CartModel extends ChangeNotifier {
   /// The current catalog. Used to construct items from numeric ids.
-  final CatalogModel _catalog;
+  final GroceryModel _catalog;
 
   // Map that maps itemId -> itemCount in cart
   final Map<int, int> _itemCountMap;
 
-  /// Construct a CartModel instance that is backed by a [CatalogModel] and
+  /// Construct a CartModel instance that is backed by a [GroceryModel] and
   /// an optional previous state of the cart.
   ///
   /// If [previous] is not `null`, its items are copied to the newly

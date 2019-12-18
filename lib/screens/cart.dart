@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:intl/intl.dart';
 
+// Used to format doubles as currency
 final oCcy = new NumberFormat("#,##0.00", "en_US");
 
-class MyCart extends StatelessWidget {
+class Cart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,7 +16,7 @@ class MyCart extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(32),
-              child: _CartList(),
+              child: _CartContents(),
             ),
           ),
           Divider(height: 10, color: Colors.black),
@@ -35,7 +36,7 @@ class MyCart extends StatelessWidget {
   }
 }
 
-class _CartList extends StatelessWidget {
+class _CartContents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var itemNameStyle = Theme.of(context).textTheme.title;
@@ -61,7 +62,6 @@ class _CartTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var hugeStyle = Theme.of(context).textTheme.display4.copyWith(fontSize: 48);
-
     return SizedBox(
       height: 200,
       child: Center(
