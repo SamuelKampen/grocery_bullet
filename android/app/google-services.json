@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "987237712409",
+    "firebase_url": "https://grocerybullet-b6dab.firebaseio.com",
+    "project_id": "grocerybullet-b6dab",
+    "storage_bucket": "grocerybullet-b6dab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987237712409:android:bd6abf626a7c858f39e088",
+        "android_client_info": {
+          "package_name": "com.phrasing.grocery_bullet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "987237712409-l17mvpkctrv3k9eomli6c5mu8jab5kr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqxz02tZaiyic8pQ6Mir0yXvcVeNetyPU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "987237712409-l17mvpkctrv3k9eomli6c5mu8jab5kr0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

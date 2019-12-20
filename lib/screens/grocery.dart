@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:grocery_bullet/models/cart.dart';
-import 'package:grocery_bullet/models/grocery.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 // Used to format doubles as currency
 final oCcy = new NumberFormat("#,##0.00", "en_US");
@@ -10,60 +10,61 @@ final oCcy = new NumberFormat("#,##0.00", "en_US");
 class Grocery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var catalog = Provider.of<GroceryModel>(context);
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(child: SizedBox(height: 12)),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              if (index >= catalog.getCatalogSize()) return null;
-              return _GroceryItem(index);
-            },
-          ),
-        )
+        StreamBuilder(
+            stream: Firestore.instance.collection('grocery').snapshots(),
+            builder: (context, snapshot) {
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) =>
+                      _GroceryItem(snapshot.data.documents[index]),
+                  childCount:
+                      snapshot.hasData ? snapshot.data.documents.length : 0,
+                ),
+              );
+            }),
       ],
     );
   }
 }
 
 class _AddButton extends StatelessWidget {
-  final Item item;
-  const _AddButton({Key key, @required this.item}) : super(key: key);
+  final DocumentSnapshot document;
+  const _AddButton({Key key, @required this.document}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<CartModel>(context);
     return IconButton(
-      onPressed: () => cart.add(item),
+      onPressed: () => cart.add(document),
       icon: Icon(Icons.add),
     );
   }
 }
 
 class _RemoveButton extends StatelessWidget {
-  final Item item;
-  const _RemoveButton({Key key, @required this.item}) : super(key: key);
+  final DocumentSnapshot document;
+  const _RemoveButton({Key key, @required this.document}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<CartModel>(context);
     return IconButton(
-      onPressed: () => cart.remove(item),
+      onPressed: () => cart.remove(document),
       icon: Icon(Icons.remove),
     );
   }
 }
 
 class _GroceryItem extends StatelessWidget {
-  final int index;
-  _GroceryItem(this.index, {Key key}) : super(key: key);
+  final DocumentSnapshot document;
+  _GroceryItem(this.document, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var catalog = Provider.of<GroceryModel>(context);
     var cart = Provider.of<CartModel>(context);
-    var item = catalog.getByPosition(index);
     var textTheme = Theme.of(context).textTheme.title;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -72,14 +73,14 @@ class _GroceryItem extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Text(item.name, style: textTheme),
+              child: Text(document['name'], style: textTheme),
             ),
             Expanded(
-              child: Text(oCcy.format(item.price), style: textTheme),
+              child: Text(oCcy.format(document['price']), style: textTheme),
             ),
-            _RemoveButton(item: item),
-            Text(cart.getItemCount(item).toString(), style: textTheme),
-            _AddButton(item: item),
+            _RemoveButton(document: document),
+            Text(cart.getItemCount(document).toString(), style: textTheme),
+            _AddButton(document: document),
           ],
         ),
       ),

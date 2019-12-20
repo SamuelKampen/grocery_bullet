@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>987237712409-n4ogpklrmk881cr70u3o04j130ahoqiq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.987237712409-n4ogpklrmk881cr70u3o04j130ahoqiq</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDHzSK_9Fnmd6NDvGRpRgG4Za2qU1fvkLo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>987237712409</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.phrasing.groceryBullet</string>
+	<key>PROJECT_ID</key>
+	<string>grocerybullet-b6dab</string>
+	<key>STORAGE_BUCKET</key>
+	<string>grocerybullet-b6dab.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:987237712409:ios:c39028958245fe2239e088</string>
+	<key>DATABASE_URL</key>
+	<string>https://grocerybullet-b6dab.firebaseio.com</string>
+</dict>
+</plist>

@@ -1,14 +1,17 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grocery_bullet/models/grocery.dart';
+
+// TODO The code in this file is an unmaintainable disaster times a million
 
 class CartModel extends ChangeNotifier {
   /// The current catalog. Used to construct items from numeric ids.
   final GroceryModel _catalog;
 
   // Map that maps itemId -> itemCount in cart
-  final Map<int, int> _itemCountMap;
+  List<DocumentSnapshot> _documents;
 
   /// Construct a CartModel instance that is backed by a [GroceryModel] and
   /// an optional previous state of the cart.
@@ -17,62 +20,62 @@ class CartModel extends ChangeNotifier {
   /// constructed instance.
   CartModel(this._catalog, CartModel previous)
       : assert(_catalog != null),
-        _itemCountMap = previous?._itemCountMap ?? new HashMap();
+        _documents = previous?._documents ?? new List();
 
   /// An empty cart with no Catalog.
   CartModel.empty()
       : _catalog = null,
-        _itemCountMap = new HashMap();
+        _documents = new List();
 
   /// List of items in the cart.
-  List<Item> get() {
-   List<Item> itemList = new List();
-   for (int id in _itemCountMap.keys) {
-     itemList.add(_catalog.getById(id));
-   }
-   return itemList;
+  HashMap<String, int> getItemCounts() {
+    HashMap<String, int> itemCounts = new HashMap();
+    for (DocumentSnapshot document in _documents) {
+      if (itemCounts.containsKey(document['name'])) {
+        itemCounts[document['name']] += 1;
+      } else {
+        itemCounts[document['name']] = 1;
+      }
+    }
+    return itemCounts;
   }
 
   /// The current total price of all items.
   double getTotalPrice() {
     double totalPrice = 0.0;
-    _itemCountMap.forEach((k,v) => totalPrice += _catalog.getById(k).price * v);
+    for (DocumentSnapshot document in _documents)
+      totalPrice += document['price'];
     return totalPrice;
   }
 
-  Item getItem(int key) => _catalog.getById(_itemCountMap[key]);
-
-  /// The count of unique items in the cart
-  int getUniqueItemCount() => _itemCountMap.keys.length;
-
   /// Adds [item] to cart.
-  void add(Item item) {
-    if (_itemCountMap.containsKey(item.id)) {
-      _itemCountMap[item.id] = _itemCountMap[item.id] + 1;
-    } else {
-      _itemCountMap[item.id] = 1;
-    }
+  void add(DocumentSnapshot document) {
+    _documents.add(document);
     // This line tells [Model] that it should rebuild the widgets that
     // depend on it.
     notifyListeners();
   }
 
   /// Returns the count of [item] int the cart
-  int getItemCount(Item item) {
-    if (_itemCountMap.containsKey(item.id)) {
-      return _itemCountMap[item.id];
+  int getItemCount(DocumentSnapshot document) {
+    int count = 0;
+    for (DocumentSnapshot documentSnapshot in _documents) {
+      if (documentSnapshot['name'] == document['name']) count++;
     }
-    return 0;
+    return count;
   }
 
   /// Removes one instance of [item] from cart if at least one exists.
   /// Does nothing if item is not in cart.
-  void remove(Item item) {
-    if (_itemCountMap.containsKey(item.id)) {
-      _itemCountMap[item.id] = _itemCountMap[item.id] - 1;
-      if (_itemCountMap[item.id] == 0) {
-        _itemCountMap.remove(item.id);
-      }
+  void remove(DocumentSnapshot document) {
+    int index = 0;
+    for (DocumentSnapshot documentSnapshot in _documents) {
+      if (documentSnapshot['name'] == document['name']) break;
+      index++;
+    }
+    if (index < _documents.length &&
+        _documents[index]['name'] == document['name']) {
+      _documents.removeAt(index);
     }
     // This line tells [Model] that it should rebuild the widgets that
     // depend on it.

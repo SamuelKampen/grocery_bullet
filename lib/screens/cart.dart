@@ -1,10 +1,14 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 // Used to format doubles as currency
 final oCcy = new NumberFormat("#,##0.00", "en_US");
+
+// TODO The code in this file is an unmaintainable disaster
 
 class Cart extends StatelessWidget {
   @override
@@ -41,16 +45,22 @@ class _CartContents extends StatelessWidget {
   Widget build(BuildContext context) {
     var itemNameStyle = Theme.of(context).textTheme.title;
     var cart = Provider.of<CartModel>(context);
-
+    HashMap<String, int> itemCounts = cart.getItemCounts();
+    List<String> names = new List();
+    List<int> counts = new List();
+    for (String key in itemCounts.keys) {
+      names.add(key);
+      counts.add(itemCounts[key]);
+    }
     return ListView.builder(
-      itemCount: cart.getUniqueItemCount(),
+      itemCount: names.length,
       itemBuilder: (context, index) => ListTile(
         leading: Text(
-          cart.getItemCount(cart.get()[index]).toString(),
+          counts[index].toString(),
           style: itemNameStyle,
         ),
         title: Text(
-          cart.get()[index].name,
+          names[index],
           style: itemNameStyle,
         ),
       ),
