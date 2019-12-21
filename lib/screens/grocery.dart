@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_counter/flutter_counter.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -30,30 +31,38 @@ class Grocery extends StatelessWidget {
   }
 }
 
-class _AddButton extends StatelessWidget {
+class _CounterWidget extends StatelessWidget {
   final DocumentSnapshot document;
-  const _AddButton({Key key, @required this.document}) : super(key: key);
+  _CounterWidget(this.document, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<CartModel>(context);
-    return IconButton(
-      onPressed: () => cart.add(document),
-      icon: Icon(Icons.add),
+    return Counter(
+      initialValue: cart.getItemCount(document),
+      minValue: 0,
+      maxValue: 1000000,
+      decimalPlaces: 0,
+      onChanged: (value) {
+        if (cart.getItemCount(document) > value) {
+          cart.remove(document);
+        } else if (cart.getItemCount(document) < value) {
+          cart.add(document);
+        }
+      },
+      textStyle: Theme.of(context).textTheme.title,
     );
   }
 }
 
-class _RemoveButton extends StatelessWidget {
-  final DocumentSnapshot document;
-  const _RemoveButton({Key key, @required this.document}) : super(key: key);
-
+class _SoldOutWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var cart = Provider.of<CartModel>(context);
-    return IconButton(
-      onPressed: () => cart.remove(document),
-      icon: Icon(Icons.remove),
+    return Row(
+      children: <Widget>[
+        Icon(Icons.announcement),
+        Text("Sold Out"),
+      ],
     );
   }
 }
@@ -64,13 +73,13 @@ class _GroceryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var cart = Provider.of<CartModel>(context);
     var textTheme = Theme.of(context).textTheme.title;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: LimitedBox(
         maxHeight: 48,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
               child: Text(document['name'], style: textTheme),
@@ -78,9 +87,9 @@ class _GroceryItem extends StatelessWidget {
             Expanded(
               child: Text(oCcy.format(document['price']), style: textTheme),
             ),
-            _RemoveButton(document: document),
-            Text(cart.getItemCount(document).toString(), style: textTheme),
-            _AddButton(document: document),
+            document['count'] == 0
+                ? _SoldOutWidget()
+                : _CounterWidget(document),
           ],
         ),
       ),

@@ -2,30 +2,20 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:grocery_bullet/models/grocery.dart';
 
 // TODO The code in this file is an unmaintainable disaster times a million
 
 class CartModel extends ChangeNotifier {
-  /// The current catalog. Used to construct items from numeric ids.
-  final GroceryModel _catalog;
-
   // Map that maps itemId -> itemCount in cart
   List<DocumentSnapshot> _documents;
 
-  /// Construct a CartModel instance that is backed by a [GroceryModel] and
-  /// an optional previous state of the cart.
-  ///
   /// If [previous] is not `null`, its items are copied to the newly
   /// constructed instance.
-  CartModel(this._catalog, CartModel previous)
-      : assert(_catalog != null),
-        _documents = previous?._documents ?? new List();
+  CartModel(CartModel previous)
+      : _documents = previous?._documents ?? new List();
 
   /// An empty cart with no Catalog.
-  CartModel.empty()
-      : _catalog = null,
-        _documents = new List();
+  CartModel.empty() : _documents = new List();
 
   /// List of items in the cart.
   HashMap<String, int> getItemCounts() {
