@@ -13,6 +13,7 @@ final oCcy = new NumberFormat("#,##0.00", "en_US");
 class Cart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var cart = Provider.of<CartModel>(context);
     return Container(
       color: Colors.white,
       child: Column(
@@ -28,7 +29,11 @@ class Cart extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: RaisedButton(
-              onPressed: () {},
+              onPressed: () {
+                cart.resetCart();
+                Scaffold.of(context).showSnackBar(
+                    SnackBar(content: Text('Your items are on the way!!')));
+              },
               child: Text('Buy', style: Theme.of(context).textTheme.display4),
               color: Colors.lightGreen,
               textColor: Colors.white,
