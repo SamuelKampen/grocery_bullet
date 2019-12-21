@@ -20,4 +20,8 @@ class Item {
 
   Item.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
+
+  bool operator ==(other) => other is Item && other.name == name;
+
+  int get hashCode => name.hashCode;
 }

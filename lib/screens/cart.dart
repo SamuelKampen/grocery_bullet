@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:grocery_bullet/models/cart.dart';
+import 'package:grocery_bullet/models/item.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -50,11 +51,11 @@ class _CartContents extends StatelessWidget {
   Widget build(BuildContext context) {
     var itemNameStyle = Theme.of(context).textTheme.title;
     var cart = Provider.of<CartModel>(context);
-    HashMap<String, int> itemCounts = cart.getItemCounts();
+    HashMap<Item, int> itemCounts = cart.getCart();
     List<String> names = new List();
     List<int> counts = new List();
-    for (String key in itemCounts.keys) {
-      names.add(key);
+    for (Item key in itemCounts.keys) {
+      names.add(key.name);
       counts.add(itemCounts[key]);
     }
     return ListView.builder(
