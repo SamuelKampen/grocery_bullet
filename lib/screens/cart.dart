@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/item.dart';
@@ -31,6 +32,22 @@ class Cart extends StatelessWidget {
             width: double.infinity,
             child: RaisedButton(
               onPressed: () {
+                Map<Item, int> cartItems = cart.getCart();
+                for (Item item in cartItems.keys) {
+                  int itemCountRequested = cartItems[item];
+                  Firestore.instance.runTransaction((transaction) async {
+                    DocumentSnapshot freshSnap =
+                        await transaction.get(item.reference);
+                    int itemCountAvailable = freshSnap['count'];
+                    int itemCountSent = itemCountAvailable >= itemCountRequested
+                        ? itemCountRequested
+                        : itemCountAvailable;
+                    int itemCountRemaining = itemCountAvailable - itemCountSent;
+                    await transaction.update(freshSnap.reference, {
+                      'count': itemCountRemaining,
+                    });
+                  });
+                }
                 cart.resetCart();
                 Scaffold.of(context).showSnackBar(
                     SnackBar(content: Text('Your items are on the way!!')));
