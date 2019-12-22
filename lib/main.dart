@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_bullet/common/theme.dart';
 import 'package:grocery_bullet/models/account.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/screens/home.dart';
+import 'package:grocery_bullet/screens/signin.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -16,9 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(builder: (context) => AccountModel()),
-        ChangeNotifierProvider(
-          create: (_) => CartModel.empty(),
-        ),
+        ChangeNotifierProvider(create: (_) => CartModel.empty()),
       ],
       child: App(),
     );
@@ -31,7 +31,23 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Grocery Bullet',
       theme: appTheme,
-      home: Home(),
+      home: LandingPage(),
+    );
+  }
+}
+
+class LandingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<FirebaseUser>(
+      future: FirebaseAuth.instance.currentUser(),
+      builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+        if (snapshot.hasData) {
+          FirebaseUser user = snapshot.data;
+          return Home();
+        }
+        return SignInPage();
+      },
     );
   }
 }

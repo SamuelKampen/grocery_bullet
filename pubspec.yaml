@@ -12,6 +12,9 @@ dependencies:
 
   flutter_counter: ^1.0.3
 
+  firebase_auth: any
+  google_sign_in: any
+
   flutter:
     sdk: flutter
 
