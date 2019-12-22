@@ -71,11 +71,6 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
     return Column(
       children: <Widget>[
         Container(
-          child: const Text('Test sign in with Google'),
-          padding: const EdgeInsets.all(16),
-          alignment: Alignment.center,
-        ),
-        Container(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           alignment: Alignment.center,
           child: RaisedButton(
@@ -106,6 +101,7 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
   // Example code of how to sign in with google.
   Future<FirebaseUser> _signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    // TODO Handle googleUser being null
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
