@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     // Using MultiProvider is convenient when providing multiple objects.
     return MultiProvider(
       providers: [
-        Provider(builder: (context) => AccountModel()),
+        ChangeNotifierProvider(create: (_) => AccountModel.empty()),
         ChangeNotifierProvider(create: (_) => CartModel.empty()),
       ],
       child: App(),
@@ -39,11 +39,13 @@ class App extends StatelessWidget {
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var account = Provider.of<AccountModel>(context);
     return FutureBuilder<FirebaseUser>(
       future: FirebaseAuth.instance.currentUser(),
       builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
         if (snapshot.hasData) {
           FirebaseUser user = snapshot.data;
+          account.user = user;
           return Home();
         }
         return SignInPage();

@@ -1,19 +1,38 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:grocery_bullet/models/account.dart';
-import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<AccountModel>(context);
-    // TODO: Make this pretty
-    return Column(
-      children: <Widget>[
-        Text(user.getUser().getEmail()),
-        Text(user.getUser().getCreditCard()),
-        Text(user.getUser().getLocation()),
-        Text(user.getUser().getUnitNumber().toString())
-      ],
+    return FutureBuilder<FirebaseUser>(
+      future: FirebaseAuth.instance.currentUser(),
+      builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+        var theme = Theme.of(context).textTheme.display4;
+        if (!snapshot.hasData) {
+          return Center(
+            child: Text('No User logged in', style: theme),
+          );
+        }
+        return Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(snapshot.data.displayName, style: theme),
+            Text(snapshot.data.email, style: theme),
+            CircleAvatar(
+              backgroundImage: NetworkImage(snapshot.data.photoUrl),
+              radius: 60,
+              backgroundColor: Colors.transparent,
+            ),
+            RaisedButton(
+              child: Text('Log out'),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+              },
+            )
+          ],
+        ));
+      },
     );
   }
 }
