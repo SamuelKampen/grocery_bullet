@@ -24,6 +24,8 @@ dependencies:
   # Import formatter for formatting doubles as currencies
   intl: ^0.15.7
 
+  flutter_google_pay: ^0.1.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
