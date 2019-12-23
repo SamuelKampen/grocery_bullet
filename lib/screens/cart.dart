@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_pay/flutter_google_pay.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:intl/intl.dart';
@@ -57,7 +56,8 @@ class _CartState extends State<Cart> {
                   });
                 }
                 _cartModel.resetCart();
-                _makeStripePayment();
+                Scaffold.of(context).showSnackBar(
+                    SnackBar(content: Text('Your items are on the way!!')));
               },
               child: Text('Buy', style: Theme.of(context).textTheme.display4),
               color: Colors.lightGreen,
@@ -67,28 +67,6 @@ class _CartState extends State<Cart> {
         ],
       ),
     );
-  }
-
-  _makeStripePayment() async {
-    var environment = 'rest'; // or 'production'
-    if (!(await FlutterGooglePay.isAvailable(environment))) {
-      print('Google pay not available');
-    } else {
-      PaymentItem pm = PaymentItem(
-          stripeToken: 'pk_test_1IV5H8NyhgGYOeK6vYV3Qw8f',
-          stripeVersion: "2018-11-08",
-          currencyCode: "usd",
-          amount: "0.10",
-          gateway: 'stripe');
-
-      FlutterGooglePay.makePayment(pm).then((Result result) {
-        if (result.status == ResultStatus.SUCCESS) {
-          print('Success');
-        }
-      }).catchError((dynamic error) {
-        print(error.toString());
-      });
-    }
   }
 }
 
