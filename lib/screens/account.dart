@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:grocery_bullet/screens/signin.dart';
 
 class Account extends StatelessWidget {
   @override
@@ -28,6 +29,8 @@ class Account extends StatelessWidget {
               child: Text('Log out'),
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => SignInPage()));
               },
             )
           ],

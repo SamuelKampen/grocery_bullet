@@ -18,43 +18,15 @@ class SignInPageState extends State<SignInPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: <Widget>[
-          Builder(builder: (BuildContext context) {
-            return FlatButton(
-              child: const Text('Sign out'),
-              textColor: Theme.of(context).buttonColor,
-              onPressed: () async {
-                final FirebaseUser user = await _auth.currentUser();
-                if (user == null) {
-                  Scaffold.of(context).showSnackBar(const SnackBar(
-                    content: Text('No one has signed in.'),
-                  ));
-                  return;
-                }
-                _signOut();
-                final String uid = user.uid;
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(uid + ' has successfully signed out.'),
-                ));
-              },
-            );
-          })
-        ],
       ),
       body: Builder(builder: (BuildContext context) {
         return ListView(
-          scrollDirection: Axis.vertical,
           children: <Widget>[
             _GoogleSignInSection(),
           ],
         );
       }),
     );
-  }
-
-  // Example code for sign out.
-  void _signOut() async {
-    await _auth.signOut();
   }
 }
 
@@ -64,8 +36,6 @@ class _GoogleSignInSection extends StatefulWidget {
 }
 
 class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
-  bool _success;
-  String _userID;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -75,25 +45,13 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
           alignment: Alignment.center,
           child: RaisedButton(
             onPressed: () async {
-              FirebaseUser user = await _signInWithGoogle();
+              await _signInWithGoogle();
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (context) => Home()));
             },
             child: const Text('Sign in with Google'),
           ),
         ),
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            _success == null
-                ? ''
-                : (_success
-                    ? 'Successfully signed in, uid: ' + _userID
-                    : 'Sign in failed'),
-            style: TextStyle(color: Colors.red),
-          ),
-        )
       ],
     );
   }
@@ -117,14 +75,6 @@ class _GoogleSignInSectionState extends State<_GoogleSignInSection> {
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
-    setState(() {
-      if (user != null) {
-        _success = true;
-        _userID = user.uid;
-      } else {
-        _success = false;
-      }
-    });
     return currentUser;
   }
 }
