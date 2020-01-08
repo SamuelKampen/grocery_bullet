@@ -1,7 +1,7 @@
 name: grocery_bullet
 description: A shopping app sample that uses Provider for state management.
 
-version: 1.0.0+1
+version: 1.9.1+hotfix.6
 
 environment:
   sdk: ">=2.5.0 <3.0.0"
@@ -23,6 +23,9 @@ dependencies:
 
   # Import formatter for formatting doubles as currencies
   intl: ^0.15.7
+
+  # Processes CC payments with square
+  square_in_app_payments: ^1.2.3
 
 dev_dependencies:
   flutter_test:

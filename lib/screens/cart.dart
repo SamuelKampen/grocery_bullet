@@ -6,6 +6,8 @@ import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:square_in_app_payments/in_app_payments.dart';
+import 'package:square_in_app_payments/models.dart';
 
 // Used to format doubles as currency
 final oCcy = new NumberFormat("#,##0.00", "en_US");
@@ -22,7 +24,7 @@ class _CartState extends State<Cart> {
 
   @override
   Widget build(BuildContext context) {
-    _cartModel = Provider.of<CartModel>(context);
+    _cartModel = Provider.of(context);
     return Container(
       color: Colors.white,
       child: Column(
@@ -39,25 +41,7 @@ class _CartState extends State<Cart> {
             width: double.infinity,
             child: RaisedButton(
               onPressed: () {
-                Map<Item, int> cartItems = _cartModel.getCart();
-                for (Item item in cartItems.keys) {
-                  int itemCountRequested = cartItems[item];
-                  Firestore.instance.runTransaction((transaction) async {
-                    DocumentSnapshot freshSnap =
-                        await transaction.get(item.reference);
-                    int itemCountAvailable = freshSnap['count'];
-                    int itemCountSent = itemCountAvailable >= itemCountRequested
-                        ? itemCountRequested
-                        : itemCountAvailable;
-                    int itemCountRemaining = itemCountAvailable - itemCountSent;
-                    await transaction.update(freshSnap.reference, {
-                      'count': itemCountRemaining,
-                    });
-                  });
-                }
-                _cartModel.resetCart();
-                Scaffold.of(context).showSnackBar(
-                    SnackBar(content: Text('Your items are on the way!!')));
+                _pay();
               },
               child: Text('Buy', style: Theme.of(context).textTheme.display4),
               color: Colors.lightGreen,
@@ -68,6 +52,43 @@ class _CartState extends State<Cart> {
       ),
     );
   }
+
+  void _pay() {
+    InAppPayments.setSquareApplicationId('sq0idp-v9L6FHpv4e7iAf315K7UnA');
+    InAppPayments.startCardEntryFlow(
+      onCardNonceRequestSuccess: _cardNonceRequestSuccess,
+      onCardEntryCancel: _cardEntryCancel,
+    );
+  }
+
+  void _cardNonceRequestSuccess(CardDetails cardDetails) {
+    InAppPayments.completeCardEntry(
+      onCardEntryComplete: _cardEntryComplete,
+    );
+  }
+
+  void _cardEntryComplete() {
+    Map<Item, int> cartItems = _cartModel.getCart();
+    for (Item item in cartItems.keys) {
+      int itemCountRequested = cartItems[item];
+      Firestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot freshSnap = await transaction.get(item.reference);
+        int itemCountAvailable = freshSnap['count'];
+        int itemCountSent = itemCountAvailable >= itemCountRequested
+            ? itemCountRequested
+            : itemCountAvailable;
+        int itemCountRemaining = itemCountAvailable - itemCountSent;
+        await transaction.update(freshSnap.reference, {
+          'count': itemCountRemaining,
+        });
+      });
+    }
+    _cartModel.resetCart();
+    Scaffold.of(context)
+        .showSnackBar(SnackBar(content: Text('Your items are on the way!!')));
+  }
+
+  void _cardEntryCancel() {}
 }
 
 class _CartContents extends StatelessWidget {
