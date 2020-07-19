@@ -27,11 +27,16 @@ class Account extends StatelessWidget {
             ),
             RaisedButton(
               child: Text('Log out'),
+              color: Colors.indigoAccent,
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => SignInPage()));
               },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.indigoAccent),
+              ),
             )
           ],
         ));

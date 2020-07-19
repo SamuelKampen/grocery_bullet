@@ -17,7 +17,7 @@ class SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Center(child: Text(widget.title)),
       ),
       body: Builder(builder: (BuildContext context) {
         return ListView(

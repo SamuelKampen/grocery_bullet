@@ -26,7 +26,7 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     _cartModel = Provider.of(context);
     return Container(
-      color: Colors.white,
+      color: Colors.blueGrey,
       child: Column(
         children: [
           Expanded(
@@ -38,14 +38,18 @@ class _CartState extends State<Cart> {
           Divider(height: 10, color: Colors.black),
           _CartTotal(),
           SizedBox(
-            width: double.infinity,
+            width: 300,
             child: RaisedButton(
               onPressed: () {
                 _pay();
               },
               child: Text('Buy', style: Theme.of(context).textTheme.display4),
-              color: Colors.lightGreen,
+              color: Colors.indigoAccent,
               textColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.indigoAccent),
+              ),
             ),
           ),
         ],

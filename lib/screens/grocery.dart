@@ -75,22 +75,15 @@ class _GroceryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme.title;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: LimitedBox(
-        maxHeight: 48,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: Text(item.name, style: textTheme),
-            ),
-            Expanded(
-              child: Text(oCcy.format(item.price), style: textTheme),
-            ),
-            item.count == 0 ? _SoldOutWidget() : _CounterWidget(item),
-          ],
+    return Card(
+      color: Colors.white54,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(item.url),
         ),
+        title: Text(item.name, style: textTheme),
+        subtitle: Text(oCcy.format(item.price), style: textTheme),
+        trailing: item.count == 0 ? _SoldOutWidget() : _CounterWidget(item),
       ),
     );
   }
