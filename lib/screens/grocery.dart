@@ -1,90 +1,71 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_counter/flutter_counter.dart';
-import 'package:grocery_bullet/models/cart.dart';
+import 'package:flutter/rendering.dart';
+import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/item.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
-// Used to format doubles as currency
-final oCcy = new NumberFormat("#,##0.00", "en_US");
+import 'package:grocery_bullet/widgets/GroceryItem.dart';
 
 class Grocery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(child: SizedBox(height: 12)),
-        StreamBuilder(
-            stream: Firestore.instance.collection('grocery').snapshots(),
-            builder: (context, snapshot) {
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _GroceryItem(
-                      Item.fromSnapshot(snapshot.data.documents[index])),
-                  childCount:
-                      snapshot.hasData ? snapshot.data.documents.length : 0,
+    return StreamBuilder(
+      stream: Firestore.instance.collection('grocery').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          Map<String, List<Widget>> categorizedItems = {};
+          for (DocumentSnapshot documentSnapshot in snapshot.data.documents) {
+            Item item = Item.fromSnapshot(documentSnapshot);
+            if (item.count <= 0) {
+              continue;
+            }
+            GroceryItem groceryItem = GroceryItem(item: item);
+            if (categorizedItems.containsKey(item.category)) {
+              categorizedItems[item.category].add(groceryItem);
+            } else {
+              categorizedItems[item.category] = [groceryItem];
+            }
+          }
+          List<Widget> columnChildren = [];
+          for (String category in categorizedItems.keys) {
+            List<Widget> rowChildren = categorizedItems[category];
+            columnChildren.add(
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                color: Colors.black26,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Utils.titleCase(category),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline6
+                          .copyWith(color: Colors.white),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: rowChildren,
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            }),
-      ],
-    );
-  }
-}
-
-class _CounterWidget extends StatelessWidget {
-  final Item item;
-  _CounterWidget(this.item, {Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var cart = Provider.of<CartModel>(context);
-    return Counter(
-      initialValue: cart.getItemCount(item),
-      minValue: 0,
-      maxValue: 1000000,
-      decimalPlaces: 0,
-      onChanged: (value) {
-        if (cart.getItemCount(item) > value) {
-          cart.remove(item);
-        } else if (cart.getItemCount(item) < value) {
-          cart.add(item);
+              ),
+            );
+          }
+          return CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildListDelegate(columnChildren),
+              )
+            ],
+          );
         }
+        return Container();
       },
-      textStyle: Theme.of(context).textTheme.title,
-    );
-  }
-}
-
-class _SoldOutWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Icon(Icons.announcement),
-        Text("Sold Out"),
-      ],
-    );
-  }
-}
-
-class _GroceryItem extends StatelessWidget {
-  final Item item;
-  _GroceryItem(this.item, {Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme.title;
-    return Card(
-      color: Colors.white54,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(item.url),
-        ),
-        title: Text(item.name, style: textTheme),
-        subtitle: Text(oCcy.format(item.price), style: textTheme),
-        trailing: item.count == 0 ? _SoldOutWidget() : _CounterWidget(item),
-      ),
     );
   }
 }
