@@ -1,0 +1,118 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:grocery_bullet/common/utils.dart';
+import 'package:grocery_bullet/models/item.dart';
+import 'package:grocery_bullet/widgets/GroceryItem.dart';
+
+class ItemSearchDelegate extends SearchDelegate<Item> {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+          showSuggestions(context);
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('grocery').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<GroceryItem> items = [];
+          for (DocumentSnapshot documentSnapshot in snapshot.data.documents) {
+            Item item = Item.fromSnapshot(documentSnapshot);
+            GroceryItem groceryItem = GroceryItem(
+              item: item,
+            );
+            if (item.count <= 0) {
+              continue;
+            }
+            if (item.name.toLowerCase().contains(query.toLowerCase())) {
+              items.add(groceryItem);
+            } else if (item.category.toLowerCase() == query.toLowerCase()) {
+              items.add(groceryItem);
+            }
+          }
+          // Sort search results, first by position of query in the name, then
+          // alphabetically.
+          items.sort((a, b) {
+            String aName = a.item.name.toLowerCase();
+            String bName = b.item.name.toLowerCase();
+            if (aName.indexOf(query) != bName.indexOf(query)) {
+              return aName.indexOf(query).compareTo(bName.indexOf(query));
+            }
+            return aName.compareTo(bName);
+          });
+          if (items.length > 0) {
+            return ListView(
+              children: items,
+            );
+          }
+        }
+        return Container(
+          child: Center(
+            child: Text(
+              'No items match your search!',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return StreamBuilder(
+      stream: Firestore.instance.collection('grocery').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<Card> suggestions = [];
+          Set<String> categories = Set();
+          for (DocumentSnapshot documentSnapshot in snapshot.data.documents) {
+            Item item = Item.fromSnapshot(documentSnapshot);
+            if (item.count > 0) {
+              categories.add(item.category);
+            }
+          }
+          for (String category in categories) {
+            suggestions.add(
+              Card(
+                child: ListTile(
+                  title: Text(Utils.titleCase(category)),
+                  onTap: () {
+                    query = category;
+                    showResults(context);
+                  },
+                  trailing: Icon(Icons.arrow_forward),
+                ),
+              ),
+            );
+          }
+          return ListView(
+            children: suggestions,
+          );
+        }
+        return Container();
+      },
+    );
+  }
+}

@@ -55,4 +55,6 @@ class CartModel extends ChangeNotifier {
     _cart = new HashMap();
     notifyListeners();
   }
+
+  bool isEmpty() => _cart.keys.toList().isEmpty;
 }

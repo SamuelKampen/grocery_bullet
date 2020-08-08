@@ -35,7 +35,7 @@ class _CartState extends State<Cart> {
           Divider(height: 10, color: Colors.black),
           CartTotal(),
           BuyButton(
-            onPressed: _pay,
+            onPressed: _cartModel.isEmpty() ? null: _pay,
           ),
         ],
       ),

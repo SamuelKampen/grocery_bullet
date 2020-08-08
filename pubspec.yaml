@@ -10,10 +10,9 @@ dependencies:
 
   cloud_firestore:
 
-  flutter_counter: ^1.0.3
-
   firebase_auth: any
   google_sign_in: any
+  font_awesome_flutter: ^8.8.1
 
   flutter:
     sdk: flutter
