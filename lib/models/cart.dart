@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:grocery_bullet/models/item.dart';
 
-class CartModel extends ChangeNotifier {
+class CartModel with ChangeNotifier {
   // Map that represents the current cart.
   // Maps (Item -> count of Item in cart).
   Map<Item, int> _cart;

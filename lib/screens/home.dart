@@ -3,7 +3,9 @@ import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/screens/account.dart';
 import 'package:grocery_bullet/screens/cart.dart';
 import 'package:grocery_bullet/screens/grocery.dart';
+import 'package:grocery_bullet/screens/map.dart';
 import 'package:grocery_bullet/search/ItemSearchDelegate.dart';
+import 'package:grocery_bullet/widgets/LocationSelector.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -22,11 +24,13 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = [
     Grocery(),
     Cart(),
+    MapPicker(),
     Account(),
   ];
   final List<String> _appBarNames = [
     'Grocery',
     'Cart',
+    'Map',
     'Account',
   ];
 
@@ -36,12 +40,13 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
+          LocationSelector(),
           IconButton(
             onPressed: () {
               showSearch(context: context, delegate: ItemSearchDelegate());
             },
             icon: Icon(Icons.search, color: Colors.black,),
-          )
+          ),
         ],
         title: Text(_appBarNames[_currentIndex],
             style: Theme.of(context).textTheme.display4),
@@ -53,6 +58,7 @@ class _HomeState extends State<Home> {
         currentIndex: _currentIndex,
         backgroundColor: Colors.indigoAccent,
         selectedItemColor: Colors.white54,
+        type: BottomNavigationBarType.fixed,
         items: [
           new BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -61,6 +67,10 @@ class _HomeState extends State<Home> {
           new BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
             title: Text('\$${oCcy.format(cart.getTotalPrice())}'),
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            title: Text('Map'),
           ),
           new BottomNavigationBarItem(
               icon: Icon(Icons.person), title: Text('Account'))

@@ -12,7 +12,6 @@ class Authenticator {
 
   Future<FirebaseUser> signInWithGoogle() async {
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    // TODO Handle googleUser being null
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,

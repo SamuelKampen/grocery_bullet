@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:grocery_bullet/location/locator.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/item.dart';
+import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/widgets/BuyButton.dart';
 import 'package:grocery_bullet/widgets/CartContents.dart';
 import 'package:grocery_bullet/widgets/CartTotal.dart';
@@ -18,6 +21,7 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   CartModel _cartModel;
+  int unitNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +38,24 @@ class _CartState extends State<Cart> {
           ),
           Divider(height: 10, color: Colors.black),
           CartTotal(),
+          Container(
+            width: 250,
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'Enter your unit number',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+              onSubmitted: (newUnitNumber) {
+                setState(() {
+                  unitNumber = int.parse(newUnitNumber);
+                });
+              },
+            ),
+          ),
           BuyButton(
-            onPressed: _cartModel.isEmpty() ? null: _pay,
+            onPressed: _cartModel.isEmpty() || unitNumber == null ? null : _pay,
           ),
         ],
       ),
@@ -58,20 +78,32 @@ class _CartState extends State<Cart> {
 
   void _cardEntryComplete() {
     Map<Item, int> cartItems = _cartModel.getCart();
-    for (Item item in cartItems.keys) {
-      int itemCountRequested = cartItems[item];
-      Firestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot freshSnap = await transaction.get(item.reference);
-        int itemCountAvailable = freshSnap['count'];
-        int itemCountSent = itemCountAvailable >= itemCountRequested
-            ? itemCountRequested
-            : itemCountAvailable;
-        int itemCountRemaining = itemCountAvailable - itemCountSent;
-        await transaction.update(freshSnap.reference, {
-          'count': itemCountRemaining,
-        });
+    Firestore.instance.runTransaction((transaction) async {
+      Location location = await Locator.getCurrentLocation();
+      DocumentSnapshot freshSnap = await transaction.get(location.reference);
+      List<Map<dynamic, dynamic>> storedGrocery =
+          List<Map<dynamic, dynamic>>.from(freshSnap['grocery']);
+      List<Map<dynamic, dynamic>> updatedGrocery = [];
+      for (int i = 0; i < storedGrocery.length; i++) {
+        Map<dynamic, dynamic> map = storedGrocery[i];
+        Item storedItem = Item.fromMap(Map<String, dynamic>.from(map));
+        for (Item item in cartItems.keys) {
+          int itemCountRequested = cartItems[item];
+          if (storedItem.name == item.name) {
+            int itemCountAvailable = storedItem.count;
+            int itemCountSent = itemCountAvailable >= itemCountRequested
+                ? itemCountRequested
+                : itemCountAvailable;
+            int itemCountRemaining = itemCountAvailable - itemCountSent;
+            map['count'] = itemCountRemaining;
+          }
+        }
+        updatedGrocery.add(map);
+      }
+      await transaction.update(freshSnap.reference, {
+        'grocery': updatedGrocery,
       });
-    }
+    });
     _cartModel.resetCart();
     Scaffold.of(context)
         .showSnackBar(SnackBar(content: Text('Your items are on the way!!')));

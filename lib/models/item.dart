@@ -1,4 +1,3 @@
-// Model to represent a document in the grocery collection in Firestore
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Item {
