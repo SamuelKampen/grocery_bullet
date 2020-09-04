@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:grocery_bullet/models/location.dart';
+
 class Utils {
-
-
   static String titleCase(String text) {
     if (text.length <= 1) return text.toUpperCase();
     var words = text.split(' ');
@@ -10,5 +11,15 @@ class Utils {
       return '$first$rest';
     });
     return capitalized.join(' ');
+  }
+
+  static Future<List<Location>> getLocations(
+      List<DocumentSnapshot> snapshots) async {
+    List<Location> locations = [];
+    for (DocumentSnapshot snapshot in snapshots) {
+      Location location = await Location.getLocation(snapshot);
+      locations.add(location);
+    }
+    return locations;
   }
 }

@@ -26,6 +26,7 @@ class Grocery extends StatelessWidget {
       }
       List<Widget> columnChildren = [];
       for (String category in categorizedItems.keys) {
+        print(categorizedItems.keys.toList());
         List<Widget> rowChildren = categorizedItems[category];
         columnChildren.add(
           Container(

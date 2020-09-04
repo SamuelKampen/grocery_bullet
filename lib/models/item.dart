@@ -8,23 +8,32 @@ class Item {
   final DocumentReference reference;
   final String category;
 
-  Item.fromMap(Map<String, dynamic> map, {this.reference})
-      : assert(map['name'] != null),
-        assert(map['price'] != null),
-        assert(map['count'] != null),
-        assert(map['url'] != null),
-        assert(map['category'] != null),
-        name = map['name'],
-        // If the value in the database is just stored as a whole number
-        // i.e. 2 the cast to double will fail so we change to string then
-        // parse as a double.
-        price = double.parse(map['price'].toString()),
-        count = map['count'],
-        url = map['url'],
-        category = map['category'];
+  Item(
+      {this.name,
+      this.price,
+      this.count,
+      this.url,
+      this.reference,
+      this.category});
 
-  Item.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+  static Future<Item> getItem(Map<String, dynamic> map) async {
+    DocumentReference reference = map['item'];
+    print(reference.path);
+    int count = map['count'];
+    DocumentSnapshot documentSnapshot = await reference.get(source: Source.server);
+    Map<String, dynamic> data = documentSnapshot.data;
+    String name = data['name'];
+    double price = double.parse(data['price'].toString());
+    String url = data['url'];
+    String category = data['category'];
+    return Item(
+        name: name,
+        price: price,
+        count: count,
+        url: url,
+        reference: reference,
+        category: category);
+  }
 
   bool operator ==(other) => other is Item && other.name == name;
 

@@ -86,7 +86,7 @@ class _CartState extends State<Cart> {
       List<Map<dynamic, dynamic>> updatedGrocery = [];
       for (int i = 0; i < storedGrocery.length; i++) {
         Map<dynamic, dynamic> map = storedGrocery[i];
-        Item storedItem = Item.fromMap(Map<String, dynamic>.from(map));
+        Item storedItem = await Item.getItem(Map<String, dynamic>.from(map));
         for (Item item in cartItems.keys) {
           int itemCountRequested = cartItems[item];
           if (storedItem.name == item.name) {

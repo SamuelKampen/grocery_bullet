@@ -15,14 +15,13 @@ class Locator {
     double minDistance = double.infinity;
     Location closestLocation;
     for (DocumentSnapshot documentSnapshot in querySnapshot.documents) {
-      Location location = Location.fromSnapshot(documentSnapshot);
+      Location location = await Location.getLocation(documentSnapshot);
       GeoPoint locationPosition = location.geoPoint;
-      double distanceToLocation =
-          await geolocator.distanceBetween(
-              usersPosition.latitude,
-              usersPosition.longitude,
-              locationPosition.latitude,
-              locationPosition.longitude);
+      double distanceToLocation = await geolocator.distanceBetween(
+          usersPosition.latitude,
+          usersPosition.longitude,
+          locationPosition.latitude,
+          locationPosition.longitude);
       if (distanceToLocation < minDistance) {
         closestLocation = location;
       }
