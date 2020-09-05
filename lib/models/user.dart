@@ -3,45 +3,29 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class User with ChangeNotifier {
-  String uid;
-  String userName;
-  String email;
-  String photoUrl;
+  final String uid;
+  final String userName;
+  final String email;
+  final String photoUrl;
 
-  User.fromData(Map<String, dynamic> data)
-      : uid = data['uid'],
-        userName = data['user_name'],
-        email = data['email'],
-        photoUrl = data['photo_url'];
+  User({this.uid, this.userName, this.email, this.photoUrl});
 
-  Map<String, dynamic> toJson() {
-    return {
-      'uid': uid,
-      'user_name': userName,
-      'email': email,
-      'photo_url': photoUrl,
-    };
-  }
-
-  User();
-
-  void establishUser() async {
+  static Future<User> getUser() async {
     FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-    if (firebaseUser != null) {
-      await Firestore.instance
-          .collection('users')
-          .document(firebaseUser.uid)
-          .setData({
-        'uid': firebaseUser.uid,
-        'user_name': firebaseUser.displayName,
-        'email': firebaseUser.email,
-        'photo_url': firebaseUser.photoUrl,
-      }, merge: true);
-      uid = firebaseUser.uid;
-      userName = firebaseUser.displayName;
-      email = firebaseUser.email;
-      photoUrl = firebaseUser.photoUrl;
-    }
+    await Firestore.instance
+        .collection('users')
+        .document(firebaseUser.uid)
+        .setData({
+      'uid': firebaseUser.uid,
+      'user_name': firebaseUser.displayName,
+      'email': firebaseUser.email,
+      'photo_url': firebaseUser.photoUrl,
+    }, merge: true);
+    String uid = firebaseUser.uid;
+    String userName = firebaseUser.displayName;
+    String email = firebaseUser.email;
+    String photoUrl = firebaseUser.photoUrl;
+    return User(uid: uid, userName: userName, email: email, photoUrl: photoUrl);
   }
 
   bool operator ==(other) => other is User && other.uid == uid;
