@@ -12,16 +12,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => CartModel.empty(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) {
-            CurrentLocation currentLocation = CurrentLocation();
-            currentLocation.establishLocation();
-            return currentLocation;
-            },
-        ),
+        ChangeNotifierProvider(create: (_) => CartModel.empty(),),
+        ChangeNotifierProvider(create: (_) => CurrentLocation(),)
       ],
       child: MaterialApp(
         theme: appTheme,

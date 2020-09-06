@@ -25,7 +25,7 @@ class SignInPage extends StatelessWidget {
               child: RaisedButton(
                 onPressed: () async {
                   await authenticator.signInWithGoogle();
-                  currentLocation.establishLocation();
+                  await currentLocation.loadValue();
                   Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (context) => Home()));
                 },

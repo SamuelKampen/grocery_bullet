@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_bullet/models/cart.dart';
+import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/user.dart';
 import 'package:grocery_bullet/screens/account.dart';
 import 'package:grocery_bullet/screens/cart.dart';
@@ -38,8 +39,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<CartModel>(context);
-    return FutureProvider(
-      create: (_) => User.getUser(),
+    return MultiProvider(
+      providers: [
+        FutureProvider(create: (_) => User.getUser(),),
+      ],
       child: Scaffold(
         appBar: AppBar(
           actions: <Widget>[
