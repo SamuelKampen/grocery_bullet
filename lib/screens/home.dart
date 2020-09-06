@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/user.dart';
@@ -38,53 +39,48 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    var cart = Provider.of<CartModel>(context);
-    return MultiProvider(
-      providers: [
-        FutureProvider(create: (_) => User.getUser(),),
-      ],
-      child: Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            LocationSelector(),
-            IconButton(
-              onPressed: () {
-                showSearch(context: context, delegate: ItemSearchDelegate());
-              },
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
+    CartModel cart = Provider.of<CartModel>(context);
+    return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          LocationSelector(),
+          IconButton(
+            onPressed: () {
+              showSearch(context: context, delegate: ItemSearchDelegate());
+            },
+            icon: Icon(
+              Icons.search,
+              color: Colors.black,
             ),
-          ],
-          title: Text(_appBarNames[_currentIndex],
-              style: Theme.of(context).textTheme.display4),
-          backgroundColor: Colors.indigoAccent,
-        ),
-        body: _children[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          backgroundColor: Colors.indigoAccent,
-          selectedItemColor: Colors.white54,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            new BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Grocery'),
-            ),
-            new BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              title: Text('\$${oCcy.format(cart.getTotalPrice())}'),
-            ),
-            new BottomNavigationBarItem(
-              icon: Icon(Icons.location_on),
-              title: Text('Map'),
-            ),
-            new BottomNavigationBarItem(
-                icon: Icon(Icons.person), title: Text('Account'))
-          ],
-        ),
+          ),
+        ],
+        title: Text(_appBarNames[_currentIndex],
+            style: Theme.of(context).textTheme.display4),
+        backgroundColor: Colors.indigoAccent,
+      ),
+      body: _children[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped,
+        currentIndex: _currentIndex,
+        backgroundColor: Colors.indigoAccent,
+        selectedItemColor: Colors.white54,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Grocery'),
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            title: Text('\$${oCcy.format(cart.getTotalPrice())}'),
+          ),
+          new BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            title: Text('Map'),
+          ),
+          new BottomNavigationBarItem(
+              icon: Icon(Icons.person), title: Text('Account'))
+        ],
       ),
     );
   }

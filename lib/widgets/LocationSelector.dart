@@ -23,6 +23,9 @@ class _LocationSelectorState extends State<LocationSelector> {
           return FutureBuilder(
             future: Utils.getLocations(snapshot.data.documents),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
+              CurrentLocation currentLocation =
+                  Provider.of<CurrentLocation>(context);
+              CartModel cartModel = Provider.of<CartModel>(context);
               if (snapshot.hasData) {
                 List<DropdownMenuItem<Location>> dropdownItems = [];
                 List<Location> locations = snapshot.data;
@@ -35,18 +38,15 @@ class _LocationSelectorState extends State<LocationSelector> {
                   );
                 }
                 return DropdownButton<Location>(
-                  value: location ??
-                      Provider.of<CurrentLocation>(context)
-                          .getCurrentLocation(),
+                  value: location ?? currentLocation.getCurrentLocation(),
                   icon: Icon(Icons.arrow_drop_down),
                   items: dropdownItems,
                   onChanged: (Location newLocation) {
                     setState(
                       () {
                         location = newLocation;
-                        Provider.of<CurrentLocation>(context)
-                            .setCurrentLocation(location);
-                        Provider.of<CartModel>(context).resetCart();
+                        currentLocation.setCurrentLocation(location);
+                        cartModel.resetCart();
                       },
                     );
                   },

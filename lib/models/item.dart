@@ -18,7 +18,6 @@ class Item {
 
   static Future<Item> getItem(Map<String, dynamic> map) async {
     DocumentReference reference = map['item'];
-    print(reference.path);
     int count = map['count'];
     DocumentSnapshot documentSnapshot = await reference.get(source: Source.server);
     Map<String, dynamic> data = documentSnapshot.data;

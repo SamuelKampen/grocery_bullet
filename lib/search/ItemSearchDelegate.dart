@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_bullet/common/utils.dart';
-import 'package:grocery_bullet/location/locator.dart';
 import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:grocery_bullet/models/location.dart';
@@ -34,38 +32,36 @@ class ItemSearchDelegate extends SearchDelegate<Item> {
 
   @override
   Widget buildResults(BuildContext context) {
-    CurrentLocation currentLocation = Provider.of<CurrentLocation>(context);
-    Location location = currentLocation.getCurrentLocation();
-    if (location != null) {
-      List<GroceryItem> items = [];
-      for (Item item in location.grocery) {
-        GroceryItem groceryItem = GroceryItem(
-          item: item,
-        );
-        if (item.count <= 0) {
-          continue;
-        }
-        if (item.name.toLowerCase().contains(query.toLowerCase())) {
-          items.add(groceryItem);
-        } else if (item.category.toLowerCase() == query.toLowerCase()) {
-          items.add(groceryItem);
-        }
+    Location location =
+        Provider.of<CurrentLocation>(context).getCurrentLocation();
+    List<GroceryItem> items = [];
+    for (Item item in location.grocery) {
+      GroceryItem groceryItem = GroceryItem(
+        item: item,
+      );
+      if (item.count <= 0) {
+        continue;
       }
-      // Sort search results, first by position of query in the name, then
-      // alphabetically.
-      items.sort((a, b) {
-        String aName = a.item.name.toLowerCase();
-        String bName = b.item.name.toLowerCase();
-        if (aName.indexOf(query) != bName.indexOf(query)) {
-          return aName.indexOf(query).compareTo(bName.indexOf(query));
-        }
-        return aName.compareTo(bName);
-      });
-      if (items.length > 0) {
-        return ListView(
-          children: items,
-        );
+      if (item.name.toLowerCase().contains(query.toLowerCase())) {
+        items.add(groceryItem);
+      } else if (item.category.toLowerCase() == query.toLowerCase()) {
+        items.add(groceryItem);
       }
+    }
+    // Sort search results, first by position of query in the name, then
+    // alphabetically.
+    items.sort((a, b) {
+      String aName = a.item.name.toLowerCase();
+      String bName = b.item.name.toLowerCase();
+      if (aName.indexOf(query) != bName.indexOf(query)) {
+        return aName.indexOf(query).compareTo(bName.indexOf(query));
+      }
+      return aName.compareTo(bName);
+    });
+    if (items.length > 0) {
+      return ListView(
+        children: items,
+      );
     }
     return Container(
       child: Center(
@@ -81,34 +77,31 @@ class ItemSearchDelegate extends SearchDelegate<Item> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    CurrentLocation currentLocation = Provider.of<CurrentLocation>(context);
-    Location location = currentLocation.getCurrentLocation();
-    if (location != null) {
-      List<Card> suggestions = [];
-      Set<String> categories = Set();
-      for (Item item in location.grocery) {
-        if (item.count > 0) {
-          categories.add(item.category);
-        }
+    Location location =
+        Provider.of<CurrentLocation>(context).getCurrentLocation();
+    List<Card> suggestions = [];
+    Set<String> categories = Set();
+    for (Item item in location.grocery) {
+      if (item.count > 0) {
+        categories.add(item.category);
       }
-      for (String category in categories) {
-        suggestions.add(
-          Card(
-            child: ListTile(
-              title: Text(Utils.titleCase(category)),
-              onTap: () {
-                query = category;
-                showResults(context);
-              },
-              trailing: Icon(Icons.arrow_forward),
-            ),
+    }
+    for (String category in categories) {
+      suggestions.add(
+        Card(
+          child: ListTile(
+            title: Text(Utils.titleCase(category)),
+            onTap: () {
+              query = category;
+              showResults(context);
+            },
+            trailing: Icon(Icons.arrow_forward),
           ),
-        );
-      }
-      return ListView(
-        children: suggestions,
+        ),
       );
     }
-    return Container();
+    return ListView(
+      children: suggestions,
+    );
   }
 }

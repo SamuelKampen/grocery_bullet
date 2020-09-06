@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_bullet/authentication/authenticator.dart';
-import 'package:grocery_bullet/models/current_location.dart';
-import 'package:grocery_bullet/screens/home.dart';
-import 'package:provider/provider.dart';
+import 'package:grocery_bullet/screens/loading_page.dart';
+import 'package:grocery_bullet/services/AuthService.dart';
 
 class SignInPage extends StatelessWidget {
-  final Authenticator authenticator = new Authenticator();
-
   @override
   Widget build(BuildContext context) {
-    CurrentLocation currentLocation = Provider.of<CurrentLocation>(context);
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -24,10 +19,9 @@ class SignInPage extends StatelessWidget {
               alignment: Alignment.center,
               child: RaisedButton(
                 onPressed: () async {
-                  await authenticator.signInWithGoogle();
-                  await currentLocation.loadValue();
-                  Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (context) => Home()));
+                  await AuthService.signInWithGoogle();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => LoadingPage()));
                 },
                 child: const Text('Sign in with Google'),
               ),

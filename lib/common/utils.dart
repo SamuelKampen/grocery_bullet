@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/location.dart';
+import 'package:grocery_bullet/models/user.dart';
 
 class Utils {
   static String titleCase(String text) {
@@ -21,5 +23,11 @@ class Utils {
       locations.add(location);
     }
     return locations;
+  }
+
+  static Future<void> loadUserAndCurrentLocation(
+      User user, CurrentLocation currentLocation) async {
+    await user.loadValue();
+    await currentLocation.loadValue();
   }
 }

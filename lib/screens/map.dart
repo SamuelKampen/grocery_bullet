@@ -25,7 +25,7 @@ class _MapPickerState extends State<MapPicker> {
         builder: (context, snapshot) {
           Location currentLocation =
               Provider.of<CurrentLocation>(context).getCurrentLocation();
-          if (currentLocation != null && snapshot.hasData) {
+          if (snapshot.hasData) {
             return FutureBuilder(
               future: Utils.getLocations(snapshot.data.documents),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
