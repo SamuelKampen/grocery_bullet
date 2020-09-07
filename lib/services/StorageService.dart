@@ -14,6 +14,7 @@ class StorageService {
       'user_name': firebaseUser.displayName,
       'email': firebaseUser.email,
       'photo_url': firebaseUser.photoUrl,
+      'past_purchases': List<Map<dynamic, dynamic>>.from([]),
     }, merge: true);
   }
 
@@ -58,5 +59,9 @@ class StorageService {
 
   static CollectionReference getLocations() {
     return Firestore.instance.collection('locations');
+  }
+
+  static Future<DocumentSnapshot> readUser(String uid) async {
+    return await Firestore.instance.document('users/' + uid).get();
   }
 }
