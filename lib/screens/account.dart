@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_bullet/models/user.dart';
 import 'package:grocery_bullet/screens/signin.dart';
+import 'package:grocery_bullet/services/AuthService.dart';
 import 'package:provider/provider.dart';
 
 class Account extends StatelessWidget {
@@ -24,7 +24,7 @@ class Account extends StatelessWidget {
           child: Text('Log out'),
           color: Colors.indigoAccent,
           onPressed: () async {
-            await FirebaseAuth.instance.signOut();
+            await AuthService.signOut();
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => SignInPage()));
           },

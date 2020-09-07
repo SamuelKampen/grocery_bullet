@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:grocery_bullet/models/location.dart';
+import 'package:grocery_bullet/services/StorageService.dart';
 
-class Locator {
+class LocationService {
   static final Geolocator geolocator = Geolocator()
     ..forceAndroidLocationManager;
 
   static Future<Location> getCurrentLocation() async {
     QuerySnapshot querySnapshot =
-        await Firestore.instance.collection('locations').getDocuments();
+        await StorageService.getLocationsQuerySnapshot();
     Position position = await geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
     GeoPoint usersPosition = GeoPoint(position.latitude, position.longitude);

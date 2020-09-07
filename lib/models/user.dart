@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:grocery_bullet/services/AuthService.dart';
+import 'package:grocery_bullet/services/StorageService.dart';
 
 class User with ChangeNotifier {
   String uid;
@@ -8,18 +9,9 @@ class User with ChangeNotifier {
   String email;
   String photoUrl;
 
-
   Future<void> loadValue() async {
-    FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-    await Firestore.instance
-        .collection('users')
-        .document(firebaseUser.uid)
-        .setData({
-      'uid': firebaseUser.uid,
-      'user_name': firebaseUser.displayName,
-      'email': firebaseUser.email,
-      'photo_url': firebaseUser.photoUrl,
-    }, merge: true);
+    FirebaseUser firebaseUser = await AuthService.getSignedInUser();
+    await StorageService.writeUser(firebaseUser);
     uid = firebaseUser.uid;
     userName = firebaseUser.displayName;
     email = firebaseUser.email;

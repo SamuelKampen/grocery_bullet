@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/cart.dart';
-import 'package:grocery_bullet/models/current_location.dart';
-import 'package:grocery_bullet/models/user.dart';
 import 'package:grocery_bullet/screens/account.dart';
 import 'package:grocery_bullet/screens/cart.dart';
 import 'package:grocery_bullet/screens/grocery.dart';

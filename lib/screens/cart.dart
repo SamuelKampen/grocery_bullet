@@ -1,10 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/current_location.dart';
-import 'package:grocery_bullet/models/item.dart';
 import 'package:grocery_bullet/services/PaymentsService.dart';
+import 'package:grocery_bullet/services/StorageService.dart';
 import 'package:grocery_bullet/widgets/BuyButton.dart';
 import 'package:grocery_bullet/widgets/CartContents.dart';
 import 'package:grocery_bullet/widgets/CartTotal.dart';
@@ -66,34 +65,9 @@ class _CartState extends State<Cart> {
     );
   }
 
-  void _cardEntryComplete() {
-    Map<Item, int> cartItems = _cartModel.getCart();
-    Firestore.instance.runTransaction((transaction) async {
-      DocumentSnapshot freshSnap =
-          await transaction.get(currentLocation.getCurrentLocation().reference);
-      List<Map<dynamic, dynamic>> storedGrocery =
-          List<Map<dynamic, dynamic>>.from(freshSnap['grocery']);
-      List<Map<dynamic, dynamic>> updatedGrocery = [];
-      for (int i = 0; i < storedGrocery.length; i++) {
-        Map<dynamic, dynamic> map = storedGrocery[i];
-        Item storedItem = await Item.getItem(Map<String, dynamic>.from(map));
-        for (Item item in cartItems.keys) {
-          int itemCountRequested = cartItems[item];
-          if (storedItem.name == item.name) {
-            int itemCountAvailable = storedItem.count;
-            int itemCountSent = itemCountAvailable >= itemCountRequested
-                ? itemCountRequested
-                : itemCountAvailable;
-            int itemCountRemaining = itemCountAvailable - itemCountSent;
-            map['count'] = itemCountRemaining;
-          }
-        }
-        updatedGrocery.add(map);
-      }
-      await transaction.update(freshSnap.reference, {
-        'grocery': updatedGrocery,
-      });
-    });
+  void _cardEntryComplete() async {
+    await StorageService.removeCartItemsFromLocationGrocery(
+        _cartModel, currentLocation);
     _cartModel.resetCart();
     Scaffold.of(context)
         .showSnackBar(SnackBar(content: Text('Your items are on the way!!')));

@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/location.dart';
+import 'package:grocery_bullet/services/StorageService.dart';
 import 'package:provider/provider.dart';
 
 class LocationSelector extends StatefulWidget {
@@ -17,7 +17,7 @@ class _LocationSelectorState extends State<LocationSelector> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection('locations').snapshots(),
+      stream: StorageService.getLocationsStream(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return FutureBuilder(

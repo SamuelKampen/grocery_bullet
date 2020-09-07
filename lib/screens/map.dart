@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/location.dart';
+import 'package:grocery_bullet/services/StorageService.dart';
 import 'package:provider/provider.dart';
 
 class MapPicker extends StatefulWidget {
@@ -21,7 +22,7 @@ class _MapPickerState extends State<MapPicker> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: Firestore.instance.collection('locations').snapshots(),
+        stream: StorageService.getLocationsStream(),
         builder: (context, snapshot) {
           Location currentLocation =
               Provider.of<CurrentLocation>(context).getCurrentLocation();

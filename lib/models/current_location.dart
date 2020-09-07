@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:grocery_bullet/location/locator.dart';
 import 'package:grocery_bullet/models/location.dart';
+import 'package:grocery_bullet/services/LocationService.dart';
 
 class CurrentLocation with ChangeNotifier {
   Location _currentLocation;
@@ -13,6 +13,6 @@ class CurrentLocation with ChangeNotifier {
   }
 
   Future<void> loadValue() async {
-    _currentLocation = await Locator.getCurrentLocation();
+    _currentLocation = await LocationService.getCurrentLocation();
   }
 }
