@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/current_location.dart';
+import 'package:grocery_bullet/models/user.dart';
 import 'package:grocery_bullet/services/PaymentsService.dart';
 import 'package:grocery_bullet/services/StorageService.dart';
 import 'package:grocery_bullet/widgets/BuyButton.dart';
@@ -20,11 +21,13 @@ class _CartState extends State<Cart> {
   CartModel _cartModel;
   int unitNumber;
   CurrentLocation currentLocation;
+  User user;
 
   @override
   Widget build(BuildContext context) {
     _cartModel = Provider.of(context);
     currentLocation = Provider.of<CurrentLocation>(context);
+    user = Provider.of<User>(context);
     return Container(
       color: Colors.blueGrey,
       child: Column(
@@ -67,7 +70,7 @@ class _CartState extends State<Cart> {
 
   void _cardEntryComplete() async {
     await StorageService.removeCartItemsFromLocationGrocery(
-        _cartModel, currentLocation);
+        _cartModel, currentLocation, user);
     _cartModel.resetCart();
     Scaffold.of(context)
         .showSnackBar(SnackBar(content: Text('Your items are on the way!!')));
