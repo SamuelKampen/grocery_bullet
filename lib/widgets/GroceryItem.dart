@@ -7,11 +7,27 @@ import 'ItemCounter.dart';
 
 class GroceryItem extends StatelessWidget {
   final Item item;
+  final bool includeCountInfo;
 
-  GroceryItem({this.item, Key key}) : super(key: key);
+  GroceryItem({this.item, this.includeCountInfo = false, Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> textChildren = [
+      Text(
+        '\$${kOCcy.format(item.price)}',
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      Text(item.name),
+    ];
+    if (includeCountInfo) {
+      textChildren.add(
+        Text('You have purchased this item ${item.count} times.')
+      );
+    }
     return Card(
       elevation: 10,
       margin: EdgeInsets.all(10),
@@ -47,15 +63,7 @@ class GroceryItem extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  '\$${kOCcy.format(item.price)}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(item.name),
-              ],
+              children: textChildren,
             ),
           ],
         ),
