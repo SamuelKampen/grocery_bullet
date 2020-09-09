@@ -13,7 +13,7 @@ class PastPurchasesScreen extends StatelessWidget {
     Location currentLocation =
         Provider.of<CurrentLocation>(context).getCurrentLocation();
     List<GroceryItem> items = [];
-    List<Item> pastPurchases = user.pastPurchases;
+    List<Item> pastPurchases = List.from(user.pastPurchases);
     pastPurchases.removeWhere((pastPurchase) => !currentLocation.grocery
         .any((groceryItem) => pastPurchase.reference == groceryItem.reference));
     pastPurchases.sort((a, b) {
