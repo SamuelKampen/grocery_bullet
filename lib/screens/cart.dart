@@ -71,6 +71,7 @@ class _CartState extends State<Cart> {
   void _cardEntryComplete() async {
     await StorageService.removeCartItemsFromLocationGrocery(
         _cartModel, currentLocation, user);
+    await user.loadValue();
     _cartModel.resetCart();
     Scaffold.of(context)
         .showSnackBar(SnackBar(content: Text('Your items are on the way!!')));

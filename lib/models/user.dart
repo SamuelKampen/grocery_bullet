@@ -23,7 +23,6 @@ class User with ChangeNotifier {
           firebaseUser, List<Map<dynamic, dynamic>>.from([]));
       storedUser = await StorageService.readUser(firebaseUser.uid);
     } else {
-      print(storedUser.data);
       Map<String, dynamic> data = storedUser.data;
       for (Map<dynamic, dynamic> map in data['past_purchases']) {
         pastPurchases.add(await Item.getItem(Map<String, dynamic>.from(map)));
