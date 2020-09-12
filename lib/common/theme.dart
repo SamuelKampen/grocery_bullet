@@ -4,7 +4,7 @@ final appTheme = ThemeData(
   primarySwatch: Colors.indigo,
   scaffoldBackgroundColor: Colors.blueGrey,
   textTheme: TextTheme(
-    display4: TextStyle(
+    headline1: TextStyle(
       fontFamily: 'Corben',
       fontWeight: FontWeight.w700,
       fontSize: 24,

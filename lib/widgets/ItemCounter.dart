@@ -4,9 +4,9 @@ import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:provider/provider.dart';
 
-
 class ItemCounter extends StatelessWidget {
   final Item item;
+
   ItemCounter({@required this.item, Key key}) : super(key: key);
 
   @override
@@ -24,16 +24,15 @@ class ItemCounter extends StatelessWidget {
           cart.add(item);
         }
       },
-      textStyle: Theme.of(context).textTheme.title,
+      textStyle: Theme.of(context).textTheme.headline6,
+      color: Theme.of(context).accentColor,
     );
   }
 }
 
-
 typedef void CounterChangeCallback(num value);
 
 class Counter extends StatelessWidget {
-
   final CounterChangeCallback onChanged;
 
   Counter({
@@ -66,16 +65,16 @@ class Counter extends StatelessWidget {
   final int decimalPlaces;
 
   ///Currently selected integer value
-  num selectedValue;
+  final num selectedValue;
 
   /// if min=0, max=5, step=3, then items will be 0 and 3.
   final num step;
 
   /// indicates the color of fab used for increment and decrement
-  Color color;
+  final Color color;
 
   /// text syle
-  TextStyle textStyle;
+  final TextStyle textStyle;
 
   final double buttonSize;
 
@@ -93,12 +92,6 @@ class Counter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-    color = color ?? themeData.accentColor;
-    textStyle = textStyle ?? new TextStyle(
-      fontSize: 20.0,
-    );
-
     return new Container(
       padding: new EdgeInsets.all(4.0),
       child: new Row(
@@ -110,22 +103,27 @@ class Counter extends StatelessWidget {
             height: buttonSize,
             child: GestureDetector(
               onTap: _decrementCounter,
-              child: Icon(FontAwesomeIcons.minus, size: 20,),
+              child: Icon(
+                FontAwesomeIcons.minus,
+                size: 20,
+              ),
             ),
           ),
           new Container(
             padding: EdgeInsets.all(4.0),
             child: new Text(
                 '${num.parse((selectedValue).toStringAsFixed(decimalPlaces))}',
-                style: textStyle
-            ),
+                style: textStyle),
           ),
           new SizedBox(
             width: buttonSize,
             height: buttonSize,
             child: GestureDetector(
               onTap: _incrementCounter,
-              child: Icon(FontAwesomeIcons.plus, size: 20,),
+              child: Icon(
+                FontAwesomeIcons.plus,
+                size: 20,
+              ),
             ),
           ),
         ],

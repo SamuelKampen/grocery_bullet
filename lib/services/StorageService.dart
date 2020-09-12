@@ -1,33 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/models/user.dart';
 
 class StorageService {
-  static Future<void> writeUser(FirebaseUser firebaseUser,
-      List<Map<dynamic, dynamic>> pastPurchases) async {
-    await Firestore.instance
+  static Future<void> writeUser(
+      auth.User firebaseUser, List<Map<dynamic, dynamic>> pastPurchases) async {
+    await FirebaseFirestore.instance
         .collection('users')
-        .document(firebaseUser.uid)
-        .setData({
-      'uid': firebaseUser.uid,
-      'user_name': firebaseUser.displayName,
-      'email': firebaseUser.email,
-      'photo_url': firebaseUser.photoUrl,
-      'past_purchases': pastPurchases,
-    }, merge: true);
+        .doc(firebaseUser.uid)
+        .set(
+      {
+        'uid': firebaseUser.uid,
+        'user_name': firebaseUser.displayName,
+        'email': firebaseUser.email,
+        'photo_url': firebaseUser.photoURL,
+        'past_purchases': pastPurchases,
+      },
+      SetOptions(merge: true),
+    );
   }
 
   static Future<void> removeCartItemsFromLocationGrocery(
       CartModel cartModel, Location currentLocation, User user) async {
-    await Firestore.instance.runTransaction((transaction) async {
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
       Map<Item, int> cartItems = cartModel.getCart();
       DocumentSnapshot freshSnap =
           await transaction.get(currentLocation.reference);
       List<Map<dynamic, dynamic>> storedGrocery =
-          List<Map<dynamic, dynamic>>.from(freshSnap['grocery']);
+          List<Map<dynamic, dynamic>>.from(freshSnap.get('grocery'));
       List<Map<dynamic, dynamic>> updatedGrocery = [];
       for (int i = 0; i < storedGrocery.length; i++) {
         Map<dynamic, dynamic> map = storedGrocery[i];
@@ -45,16 +48,16 @@ class StorageService {
         }
         updatedGrocery.add(map);
       }
-      await transaction.update(freshSnap.reference, {
+      transaction.update(freshSnap.reference, {
         'grocery': updatedGrocery,
       });
     });
 
-    await Firestore.instance.runTransaction((transaction) async {
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
       Map<Item, int> cartItems = cartModel.getCart();
       DocumentSnapshot userFreshSnap = await transaction.get(user.reference);
       List<Map<dynamic, dynamic>> storedPastPurchases =
-          List<Map<dynamic, dynamic>>.from(userFreshSnap['past_purchases']);
+          List<Map<dynamic, dynamic>>.from(userFreshSnap.get('past_purchases'));
       List<Map<dynamic, dynamic>> updatedPastPurchases = [];
       for (Item item in cartItems.keys) {
         int itemCountRequested = cartItems[item];
@@ -79,7 +82,7 @@ class StorageService {
           updatedPastPurchases.add(storedPastPurchases[i]);
         }
       }
-      await transaction.update(userFreshSnap.reference, {
+      transaction.update(userFreshSnap.reference, {
         'past_purchases': updatedPastPurchases,
       });
     });
@@ -90,14 +93,14 @@ class StorageService {
   }
 
   static Future<QuerySnapshot> getLocationsQuerySnapshot() async {
-    return await getLocations().getDocuments();
+    return await getLocations().get();
   }
 
   static CollectionReference getLocations() {
-    return Firestore.instance.collection('locations');
+    return FirebaseFirestore.instance.collection('locations');
   }
 
   static Future<DocumentSnapshot> readUser(String uid) async {
-    return await Firestore.instance.document('users/' + uid).get();
+    return await FirebaseFirestore.instance.doc('users/' + uid).get();
   }
 }

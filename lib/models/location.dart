@@ -12,7 +12,7 @@ class Location {
       {this.name, this.geoPoint, this.reference, this.units, this.grocery});
 
   static Future<Location> getLocation(DocumentSnapshot snapshot) async {
-    Map<String, dynamic> data = snapshot.data;
+    Map<String, dynamic> data = snapshot.data();
     DocumentReference reference = snapshot.reference;
     String name = data['name'];
     GeoPoint geoPoint = data['location'];

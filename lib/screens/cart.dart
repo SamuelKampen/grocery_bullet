@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grocery_bullet/models/cart.dart';
-import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/models/user.dart';
 import 'package:grocery_bullet/services/PaymentsService.dart';

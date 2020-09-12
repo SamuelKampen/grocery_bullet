@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 import 'package:grocery_bullet/services/AuthService.dart';
 import 'package:grocery_bullet/services/StorageService.dart';
@@ -14,7 +14,7 @@ class User with ChangeNotifier {
   DocumentReference reference;
 
   Future<void> loadValue() async {
-    FirebaseUser firebaseUser = await AuthService.getSignedInUser();
+    auth.User firebaseUser = await AuthService.getSignedInUser();
     DocumentSnapshot storedUser =
         await StorageService.readUser(firebaseUser.uid);
     pastPurchases = [];
@@ -23,7 +23,7 @@ class User with ChangeNotifier {
           firebaseUser, List<Map<dynamic, dynamic>>.from([]));
       storedUser = await StorageService.readUser(firebaseUser.uid);
     } else {
-      Map<String, dynamic> data = storedUser.data;
+      Map<String, dynamic> data = storedUser.data();
       for (Map<dynamic, dynamic> map in data['past_purchases']) {
         pastPurchases.add(await Item.getItem(Map<String, dynamic>.from(map)));
       }
@@ -31,7 +31,7 @@ class User with ChangeNotifier {
     uid = firebaseUser.uid;
     userName = firebaseUser.displayName;
     email = firebaseUser.email;
-    photoUrl = firebaseUser.photoUrl;
+    photoUrl = firebaseUser.photoURL;
     reference = storedUser.reference;
   }
 

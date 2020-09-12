@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
           ),
         ],
         title: Text(_appBarNames[_currentIndex],
-            style: Theme.of(context).textTheme.display4),
+            style: Theme.of(context).textTheme.headline1),
         backgroundColor: Colors.indigoAccent,
       ),
       body: _children[_currentIndex],

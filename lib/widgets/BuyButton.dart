@@ -13,7 +13,7 @@ class BuyButton extends StatelessWidget {
       child: RaisedButton(
         onPressed: onPressed,
         disabledColor: Colors.black12,
-        child: Text('Buy', style: Theme.of(context).textTheme.display4),
+        child: Text('Buy', style: Theme.of(context).textTheme.headline1),
         color: Colors.indigoAccent,
         textColor: Colors.white,
         shape: RoundedRectangleBorder(

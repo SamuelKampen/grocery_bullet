@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class CartContents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var itemNameStyle = Theme.of(context).textTheme.title;
+    var itemNameStyle = Theme.of(context).textTheme.headline6;
     var cart = Provider.of<CartModel>(context);
     Map<Item, int> itemCounts = cart.getCart();
     List<String> names = List();

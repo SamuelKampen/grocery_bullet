@@ -4,21 +4,18 @@ import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/services/StorageService.dart';
 
 class LocationService {
-  static final Geolocator geolocator = Geolocator()
-    ..forceAndroidLocationManager;
-
   static Future<Location> getCurrentLocation() async {
     QuerySnapshot querySnapshot =
         await StorageService.getLocationsQuerySnapshot();
-    Position position = await geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
+    Position position =
+        await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     GeoPoint usersPosition = GeoPoint(position.latitude, position.longitude);
     double minDistance = double.infinity;
     Location closestLocation;
-    for (DocumentSnapshot documentSnapshot in querySnapshot.documents) {
+    for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
       Location location = await Location.getLocation(documentSnapshot);
       GeoPoint locationPosition = location.geoPoint;
-      double distanceToLocation = await geolocator.distanceBetween(
+      double distanceToLocation = distanceBetween(
           usersPosition.latitude,
           usersPosition.longitude,
           locationPosition.latitude,

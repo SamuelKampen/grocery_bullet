@@ -19,8 +19,8 @@ class Item {
   static Future<Item> getItem(Map<String, dynamic> map) async {
     DocumentReference reference = map['item'];
     int count = map['count'];
-    DocumentSnapshot documentSnapshot = await reference.get(source: Source.server);
-    Map<String, dynamic> data = documentSnapshot.data;
+    DocumentSnapshot documentSnapshot = await reference.get();
+    Map<String, dynamic> data = documentSnapshot.data();
     String name = data['name'];
     double price = double.parse(data['price'].toString());
     String url = data['url'];

@@ -9,7 +9,7 @@ class Account extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
-    var theme = Theme.of(context).textTheme.display4;
+    var theme = Theme.of(context).textTheme.headline1;
     return Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,

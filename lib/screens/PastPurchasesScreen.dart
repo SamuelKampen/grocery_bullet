@@ -39,7 +39,7 @@ class PastPurchasesScreen extends StatelessWidget {
         return Scaffold(
             appBar: AppBar(
               title: Text('Past Purchases',
-                  style: Theme.of(context).textTheme.display4),
+                  style: Theme.of(context).textTheme.headline1),
               backgroundColor: Colors.indigoAccent,
             ),
             body: pastPurchases.length > 0
