@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/current_location.dart';
+import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/models/user.dart';
 import 'package:grocery_bullet/services/PaymentsService.dart';
 import 'package:grocery_bullet/services/StorageService.dart';
 import 'package:grocery_bullet/widgets/BuyButton.dart';
 import 'package:grocery_bullet/widgets/CartContents.dart';
 import 'package:grocery_bullet/widgets/CartTotal.dart';
+import 'package:grocery_bullet/widgets/CurrentLocationBuilder.dart';
 import 'package:provider/provider.dart';
 
 class Cart extends StatefulWidget {
@@ -20,51 +22,60 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   CartModel _cartModel;
   int unitNumber;
-  CurrentLocation currentLocation;
+  Location currentLocation;
   User user;
 
   @override
   Widget build(BuildContext context) {
     _cartModel = Provider.of(context);
-    currentLocation = Provider.of<CurrentLocation>(context);
     user = Provider.of<User>(context);
-    return Container(
-      color: Colors.blueGrey,
-      child: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: CartContents(),
-            ),
-          ),
-          Divider(height: 10, color: Colors.black),
-          CartTotal(),
-          Container(
-            width: 250,
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Enter your unit number',
-                border: OutlineInputBorder(),
+    return CurrentLocationBuilder(
+      asyncWidgetBuilder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            color: Colors.blueGrey,
+          );
+        }
+        currentLocation = snapshot.data;
+        return Container(
+          color: Colors.blueGrey,
+          child: Column(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: CartContents(),
+                ),
               ),
-              keyboardType: TextInputType.number,
-              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              onSubmitted: (newUnitNumber) {
-                setState(() {
-                  unitNumber = int.parse(newUnitNumber);
-                });
-              },
-            ),
+              Divider(height: 10, color: Colors.black),
+              CartTotal(),
+              Container(
+                width: 250,
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Enter your unit number',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  onSubmitted: (newUnitNumber) {
+                    setState(() {
+                      unitNumber = int.parse(newUnitNumber);
+                    });
+                  },
+                ),
+              ),
+              BuyButton(
+                  onPressed: _cartModel.isEmpty() || unitNumber == null
+                      ? null
+                      : () {
+                          PaymentsService.executePaymentFlow(
+                              _cardEntryComplete, () {});
+                        }),
+            ],
           ),
-          BuyButton(
-              onPressed: _cartModel.isEmpty() || unitNumber == null
-                  ? null
-                  : () {
-                      PaymentsService.executePaymentFlow(
-                          _cardEntryComplete, () {});
-                    }),
-        ],
-      ),
+        );
+      },
     );
   }
 

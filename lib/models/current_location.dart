@@ -5,7 +5,12 @@ import 'package:grocery_bullet/services/LocationService.dart';
 class CurrentLocation with ChangeNotifier {
   Location _currentLocation;
 
-  Location getCurrentLocation() => _currentLocation;
+  Future<Location> getCurrentLocation() async {
+    if (_currentLocation == null) {
+      _currentLocation = await LocationService.getCurrentLocation();
+    }
+    return _currentLocation;
+  }
 
   void setCurrentLocation(Location newLocation) {
     _currentLocation = newLocation;

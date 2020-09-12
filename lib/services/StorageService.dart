@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grocery_bullet/models/cart.dart';
-import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/item.dart';
+import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/models/user.dart';
 
 class StorageService {
@@ -21,11 +21,11 @@ class StorageService {
   }
 
   static Future<void> removeCartItemsFromLocationGrocery(
-      CartModel cartModel, CurrentLocation currentLocation, User user) async {
+      CartModel cartModel, Location currentLocation, User user) async {
     await Firestore.instance.runTransaction((transaction) async {
       Map<Item, int> cartItems = cartModel.getCart();
       DocumentSnapshot freshSnap =
-          await transaction.get(currentLocation.getCurrentLocation().reference);
+          await transaction.get(currentLocation.reference);
       List<Map<dynamic, dynamic>> storedGrocery =
           List<Map<dynamic, dynamic>>.from(freshSnap['grocery']);
       List<Map<dynamic, dynamic>> updatedGrocery = [];

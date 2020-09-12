@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grocery_bullet/common/utils.dart';
-import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/services/StorageService.dart';
-import 'package:provider/provider.dart';
+import 'package:grocery_bullet/widgets/CurrentLocationBuilder.dart';
 
 class MapPicker extends StatefulWidget {
   @override
@@ -24,13 +23,27 @@ class _MapPickerState extends State<MapPicker> {
     return StreamBuilder(
         stream: StorageService.getLocationsStream(),
         builder: (context, snapshot) {
-          Location currentLocation =
-              Provider.of<CurrentLocation>(context).getCurrentLocation();
-          if (snapshot.hasData) {
-            return FutureBuilder(
-              future: Utils.getLocations(snapshot.data.documents),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
+          if (!snapshot.hasData) {
+            return Container(
+              color: Colors.blueGrey,
+            );
+          }
+          return FutureBuilder(
+            future: Utils.getLocations(snapshot.data.documents),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData) {
+                return Container(
+                  color: Colors.blueGrey,
+                );
+              }
+              return CurrentLocationBuilder(
+                asyncWidgetBuilder: (context, currentLocationSnapshot) {
+                  if (!currentLocationSnapshot.hasData) {
+                    return Container(
+                      color: Colors.blueGrey,
+                    );
+                  }
+                  Location currentLocation = currentLocationSnapshot.data;
                   Map<GeoPoint, Marker> markers = {};
                   List<Location> locations = snapshot.data;
                   for (Location location in locations) {
@@ -61,12 +74,10 @@ class _MapPickerState extends State<MapPicker> {
                     ),
                     markers: markers.values.toSet(),
                   );
-                }
-                return Container();
-              },
-            );
-          }
-          return Container();
+                },
+              );
+            },
+          );
         });
   }
 }

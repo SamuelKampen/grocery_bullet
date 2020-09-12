@@ -4,6 +4,7 @@ import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/services/StorageService.dart';
+import 'package:grocery_bullet/widgets/CurrentLocationBuilder.dart';
 import 'package:provider/provider.dart';
 
 class LocationSelector extends StatefulWidget {
@@ -23,30 +24,37 @@ class _LocationSelectorState extends State<LocationSelector> {
           return FutureBuilder(
             future: Utils.getLocations(snapshot.data.documents),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              CurrentLocation currentLocation =
-                  Provider.of<CurrentLocation>(context);
               CartModel cartModel = Provider.of<CartModel>(context);
               if (snapshot.hasData) {
-                List<DropdownMenuItem<Location>> dropdownItems = [];
-                List<Location> locations = snapshot.data;
-                for (Location toAddLocation in locations) {
-                  dropdownItems.add(
-                    DropdownMenuItem<Location>(
-                      value: toAddLocation,
-                      child: Text(toAddLocation.name),
-                    ),
-                  );
-                }
-                return DropdownButton<Location>(
-                  value: location ?? currentLocation.getCurrentLocation(),
-                  icon: Icon(Icons.arrow_drop_down),
-                  items: dropdownItems,
-                  onChanged: (Location newLocation) {
-                    setState(
-                      () {
-                        location = newLocation;
-                        currentLocation.setCurrentLocation(location);
-                        cartModel.resetCart();
+                return CurrentLocationBuilder(
+                  asyncWidgetBuilder: (context, currentLocationSnapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return Container();
+                    }
+                    Location currentLocation = currentLocationSnapshot.data;
+                    List<DropdownMenuItem<Location>> dropdownItems = [];
+                    List<Location> locations = snapshot.data;
+                    for (Location toAddLocation in locations) {
+                      dropdownItems.add(
+                        DropdownMenuItem<Location>(
+                          value: toAddLocation,
+                          child: Text(toAddLocation.name),
+                        ),
+                      );
+                    }
+                    return DropdownButton<Location>(
+                      value: location ?? currentLocation,
+                      icon: Icon(Icons.arrow_drop_down),
+                      items: dropdownItems,
+                      onChanged: (Location newLocation) {
+                        setState(
+                          () {
+                            location = newLocation;
+                            Provider.of<CurrentLocation>(context)
+                                .setCurrentLocation(location);
+                            cartModel.resetCart();
+                          },
+                        );
                       },
                     );
                   },
