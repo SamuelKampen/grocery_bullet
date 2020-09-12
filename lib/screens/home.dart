@@ -1,4 +1,6 @@
+import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/screens/account.dart';
 import 'package:grocery_bullet/screens/cart.dart';
@@ -56,27 +58,32 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.indigoAccent,
       ),
       body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CustomNavigationBar(
         onTap: onTabTapped,
         currentIndex: _currentIndex,
         backgroundColor: Colors.indigoAccent,
-        selectedItemColor: Colors.white54,
-        type: BottomNavigationBarType.fixed,
+        selectedColor: Colors.white,
+        unSelectedColor: Colors.grey,
         items: [
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Grocery'),
+          new CustomNavigationBarItem(
+            icon: FontAwesomeIcons.home,
+            unSelectedTitle: 'Grocery',
+            selectedTitle: 'Grocery',
           ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            title: Text('\$${oCcy.format(cart.getTotalPrice())}'),
+          new CustomNavigationBarItem(
+            icon: FontAwesomeIcons.shoppingCart,
+            unSelectedTitle: '\$${oCcy.format(cart.getTotalPrice())}',
+            selectedTitle: '\$${oCcy.format(cart.getTotalPrice())}',
           ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.location_on),
-            title: Text('Map'),
+          new CustomNavigationBarItem(
+            icon: FontAwesomeIcons.mapMarkerAlt,
+            unSelectedTitle: 'Map',
+            selectedTitle: 'Map',
           ),
-          new BottomNavigationBarItem(
-              icon: Icon(Icons.person), title: Text('Account'))
+          new CustomNavigationBarItem(
+              icon: FontAwesomeIcons.userCircle,
+              unSelectedTitle: 'Account',
+              selectedTitle: 'Account')
         ],
       ),
     );
