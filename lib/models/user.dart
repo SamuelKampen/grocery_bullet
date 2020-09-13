@@ -18,7 +18,7 @@ class User with ChangeNotifier {
     DocumentSnapshot storedUser =
         await StorageService.readUser(firebaseUser.uid);
     pastPurchases = [];
-    if (storedUser.data == null) {
+    if (storedUser.data() == null) {
       await StorageService.writeUser(
           firebaseUser, List<Map<dynamic, dynamic>>.from([]));
       storedUser = await StorageService.readUser(firebaseUser.uid);
