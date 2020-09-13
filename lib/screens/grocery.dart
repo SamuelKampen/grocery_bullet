@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:grocery_bullet/models/location.dart';
@@ -13,7 +14,7 @@ class Grocery extends StatelessWidget {
       asyncWidgetBuilder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container(
-            color: Colors.blueGrey,
+            color: kPrimaryColor,
           );
         }
         Location currentLocation = snapshot.data;
@@ -35,7 +36,7 @@ class Grocery extends StatelessWidget {
           columnChildren.add(
             Container(
               margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              color: Colors.black26,
+              color: kSecondaryColor,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +46,7 @@ class Grocery extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .headline6
-                        .copyWith(color: Colors.white),
+                        .copyWith(color: kTextColor),
                   ),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,

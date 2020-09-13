@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:grocery_bullet/models/location.dart';
@@ -35,13 +36,14 @@ class ItemSearchDelegate extends SearchDelegate<Item> {
       asyncWidgetBuilder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container(
-            color: Colors.blueGrey,
+            color: kPrimaryColor,
           );
         }
         Location location = snapshot.data;
         List<GroceryItem> items = [];
         for (Item item in location.grocery) {
           GroceryItem groceryItem = GroceryItem(
+            cardColor: kSecondaryColor,
             item: item,
           );
           if (item.count <= 0) {
@@ -88,7 +90,7 @@ class ItemSearchDelegate extends SearchDelegate<Item> {
       asyncWidgetBuilder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container(
-            color: Colors.blueGrey,
+            color: kPrimaryColor,
           );
         }
         Location location = snapshot.data;

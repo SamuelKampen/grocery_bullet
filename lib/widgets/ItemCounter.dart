@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +25,7 @@ class ItemCounter extends StatelessWidget {
           cart.add(item);
         }
       },
-      textStyle: Theme.of(context).textTheme.headline6,
-      color: Theme.of(context).accentColor,
+      textStyle: Theme.of(context).textTheme.headline6.copyWith(color: kTextColor),
     );
   }
 }
@@ -42,7 +42,6 @@ class Counter extends StatelessWidget {
     @required this.maxValue,
     @required this.onChanged,
     @required this.decimalPlaces,
-    this.color,
     this.textStyle,
     this.step = 1,
     this.buttonSize = 25,
@@ -69,9 +68,6 @@ class Counter extends StatelessWidget {
 
   /// if min=0, max=5, step=3, then items will be 0 and 3.
   final num step;
-
-  /// indicates the color of fab used for increment and decrement
-  final Color color;
 
   /// text syle
   final TextStyle textStyle;
@@ -106,6 +102,7 @@ class Counter extends StatelessWidget {
               child: Icon(
                 FontAwesomeIcons.minus,
                 size: 20,
+                color: kButtonColor,
               ),
             ),
           ),
@@ -123,6 +120,7 @@ class Counter extends StatelessWidget {
               child: Icon(
                 FontAwesomeIcons.plus,
                 size: 20,
+                color: kButtonColor,
               ),
             ),
           ),

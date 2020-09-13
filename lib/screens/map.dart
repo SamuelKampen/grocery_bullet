@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/services/StorageService.dart';
@@ -25,7 +26,7 @@ class _MapPickerState extends State<MapPicker> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Container(
-              color: Colors.blueGrey,
+              color: kPrimaryColor,
             );
           }
           return FutureBuilder(
@@ -33,14 +34,14 @@ class _MapPickerState extends State<MapPicker> {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData) {
                 return Container(
-                  color: Colors.blueGrey,
+                  color: kPrimaryColor,
                 );
               }
               return CurrentLocationBuilder(
                 asyncWidgetBuilder: (context, currentLocationSnapshot) {
                   if (!currentLocationSnapshot.hasData) {
                     return Container(
-                      color: Colors.blueGrey,
+                      color: kPrimaryColor,
                     );
                   }
                   Location currentLocation = currentLocationSnapshot.data;

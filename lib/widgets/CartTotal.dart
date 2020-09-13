@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 class CartTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var hugeStyle = Theme.of(context).textTheme.headline1.copyWith(fontSize: 48);
+    var hugeStyle = Theme.of(context)
+        .textTheme
+        .headline1
+        .copyWith(fontSize: 48, color: kTextColor);
     return SizedBox(
       height: 200,
       child: Center(

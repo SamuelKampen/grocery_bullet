@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'Constants.dart';
+
 final appTheme = ThemeData(
-  primarySwatch: Colors.indigo,
-  scaffoldBackgroundColor: Colors.blueGrey,
+  scaffoldBackgroundColor: kPrimaryColor,
+  hintColor: kDividerColor,
   textTheme: TextTheme(
     headline1: TextStyle(
       fontFamily: 'Corben',

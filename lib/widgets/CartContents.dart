@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 class CartContents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var itemNameStyle = Theme.of(context).textTheme.headline6;
+    var itemNameStyle =
+        Theme.of(context).textTheme.headline6.copyWith(color: kTextColor);
     var cart = Provider.of<CartModel>(context);
     Map<Item, int> itemCounts = cart.getCart();
     List<String> names = List();
@@ -30,7 +31,9 @@ class CartContents extends StatelessWidget {
           style: itemNameStyle,
         ),
         subtitle: Text(
-            '\$${kOCcy.format(items[index].price * counts[index])}'),
+          '\$${kOCcy.format(items[index].price * counts[index])}',
+          style: TextStyle(color: kTextColor),
+        ),
         trailing: ItemCounter(
           item: items[index],
         ),

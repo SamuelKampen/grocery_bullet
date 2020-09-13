@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/models/item.dart';
 import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/models/user.dart';
@@ -14,7 +15,7 @@ class PastPurchasesScreen extends StatelessWidget {
       asyncWidgetBuilder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container(
-            color: Colors.blueGrey,
+            color: kPrimaryColor,
           );
         }
         Location currentLocation = snapshot.data;
@@ -30,6 +31,7 @@ class PastPurchasesScreen extends StatelessWidget {
           GroceryItem groceryItem = GroceryItem(
             item: item,
             includeCountInfo: true,
+            cardColor: kSecondaryColor,
           );
           items.add(groceryItem);
         }
@@ -39,12 +41,19 @@ class PastPurchasesScreen extends StatelessWidget {
         return Scaffold(
             appBar: AppBar(
               title: Text('Past Purchases',
-                  style: Theme.of(context).textTheme.headline1),
-              backgroundColor: Colors.indigoAccent,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline1
+                      .copyWith(color: kTextColor)),
+              backgroundColor: kSecondaryColor,
             ),
             body: pastPurchases.length > 0
                 ? pastPurchasesView
-                : Center(child: Text('You have not purchased any items!')));
+                : Center(
+                    child: Text(
+                    'You have not purchased any items!',
+                    style: TextStyle(color: kTextColor),
+                  )));
       },
     );
   }

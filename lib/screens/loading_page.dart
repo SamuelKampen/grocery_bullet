@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/current_location.dart';
 import 'package:grocery_bullet/models/user.dart';
@@ -16,7 +17,7 @@ class LoadingPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container(
-            color:  Colors.blueGrey,
+            color:  kPrimaryColor,
           );
         }
         return Home();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/location.dart';
 import 'package:grocery_bullet/models/user.dart';
@@ -32,12 +33,12 @@ class _CartState extends State<Cart> {
       asyncWidgetBuilder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
-            color: Colors.blueGrey,
+            color: kPrimaryColor,
           );
         }
         currentLocation = snapshot.data;
         return Container(
-          color: Colors.blueGrey,
+          color: kPrimaryColor,
           child: Column(
             children: [
               Expanded(
@@ -46,17 +47,25 @@ class _CartState extends State<Cart> {
                   child: CartContents(),
                 ),
               ),
-              Divider(height: 10, color: Colors.black),
+              Divider(height: 10, color: kDividerColor),
               CartTotal(),
               Container(
                 width: 250,
                 child: TextField(
+                  style: TextStyle(color: kTextColor),
                   decoration: InputDecoration(
                     labelText: 'Enter your unit number',
-                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: kTextColor),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: kDividerColor),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: kDividerColor),
+                    ),
                   ),
                   keyboardType: TextInputType.number,
-                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  inputFormatters: [
+                    WhitelistingTextInputFormatter.digitsOnly],
                   onSubmitted: (newUnitNumber) {
                     setState(() {
                       unitNumber = int.parse(newUnitNumber);

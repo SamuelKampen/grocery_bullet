@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/common/utils.dart';
 import 'package:grocery_bullet/models/cart.dart';
 import 'package:grocery_bullet/models/current_location.dart';
@@ -38,7 +39,14 @@ class _LocationSelectorState extends State<LocationSelector> {
                       dropdownItems.add(
                         DropdownMenuItem<Location>(
                           value: toAddLocation,
-                          child: Text(toAddLocation.name),
+                          child: Text(
+                            toAddLocation.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText2
+                                .copyWith(
+                                    color: Color.fromRGBO(222, 222, 222, 1)),
+                          ),
                         ),
                       );
                     }
@@ -46,6 +54,7 @@ class _LocationSelectorState extends State<LocationSelector> {
                       value: location ?? currentLocation,
                       icon: Icon(Icons.arrow_drop_down),
                       items: dropdownItems,
+                      dropdownColor: kSecondaryColor,
                       onChanged: (Location newLocation) {
                         setState(
                           () {

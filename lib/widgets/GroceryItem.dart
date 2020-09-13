@@ -8,8 +8,9 @@ import 'ItemCounter.dart';
 class GroceryItem extends StatelessWidget {
   final Item item;
   final bool includeCountInfo;
+  final Color cardColor;
 
-  GroceryItem({this.item, this.includeCountInfo = false, Key key})
+  GroceryItem({this.item, this.includeCountInfo = false, this.cardColor = kPrimaryColor, Key key})
       : super(key: key);
 
   @override
@@ -17,22 +18,32 @@ class GroceryItem extends StatelessWidget {
     List<Widget> textChildren = [
       Text(
         '\$${kOCcy.format(item.price)}',
-        style: TextStyle(
-          fontWeight: FontWeight.w700,
-        ),
+        style: TextStyle(fontWeight: FontWeight.w700, color: kTextColor),
       ),
-      Text(item.name),
+      Text(
+        item.name,
+        style: TextStyle(color: kTextColor),
+      ),
     ];
     if (includeCountInfo) {
-      textChildren.add(
-        Text('You have purchased this item ${item.count} times.')
-      );
+      textChildren.add(Text(
+        'You have purchased this item ${item.count} times.',
+        style: TextStyle(color: kTextColor),
+      ));
     }
     return Card(
       elevation: 10,
       margin: EdgeInsets.all(10),
       child: Container(
-        color: Colors.black12,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: cardColor,
+              spreadRadius: 5,
+              blurRadius: 5,
+            ),
+          ],
+        ),
         child: Column(
           children: <Widget>[
             Container(
@@ -50,7 +61,6 @@ class GroceryItem extends StatelessWidget {
                     width: 150,
                     height: 150,
                     decoration: BoxDecoration(
-                      color: Colors.white,
                       image: DecorationImage(
                         image: NetworkImage(item.url),
                         fit: BoxFit.contain,

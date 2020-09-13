@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_bullet/common/Constants.dart';
 import 'package:grocery_bullet/screens/loading_page.dart';
 import 'package:grocery_bullet/services/AuthService.dart';
 
@@ -10,10 +11,15 @@ class SignInPage extends StatelessWidget {
         title: Center(
           child: Text('Registration'),
         ),
+        backgroundColor: kSecondaryColor,
       ),
       body: Container(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Image(
+              image: AssetImage('assets/logo.png'),
+            ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               alignment: Alignment.center,
