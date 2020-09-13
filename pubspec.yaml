@@ -18,6 +18,7 @@ dependencies:
   geocoder: ^0.2.1
   custom_navigation_bar: ^0.3.0
   firebase_core: ^0.5.0
+  flutter_signin_button: ^1.1.0
 
   flutter:
     sdk: flutter
