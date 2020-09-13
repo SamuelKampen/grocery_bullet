@@ -51,7 +51,7 @@ class PastPurchasesScreen extends StatelessWidget {
                 ? pastPurchasesView
                 : Center(
                     child: Text(
-                    'You have not purchased any items!',
+                    'You have not purchased any items available at this location!',
                     style: TextStyle(color: kTextColor),
                   )));
       },
